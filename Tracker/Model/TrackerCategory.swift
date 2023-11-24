@@ -1,8 +1,6 @@
-//
-//  File.swift
-//  Tracker
-//
-//  Created by Алексей Гвоздков on 23.11.2023.
-//
+import UIKit
 
-import Foundation
+struct TrackerCategory {
+    let name: String
+    let trackers: [Tracker]
+}

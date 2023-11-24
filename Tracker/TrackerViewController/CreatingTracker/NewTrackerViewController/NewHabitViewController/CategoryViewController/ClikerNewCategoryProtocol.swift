@@ -1,8 +1,6 @@
-//
-//  ClikerNewCategoryProtocol.swift
-//  Tracker
-//
-//  Created by Алексей Гвоздков on 23.11.2023.
-//
-
 import Foundation
+
+protocol ClikerNewCategoryProtocol: AnyObject {
+    func clikerNewCategory(_ newImage: String? )
+}
+
