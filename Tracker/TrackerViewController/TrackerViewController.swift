@@ -4,6 +4,10 @@ class TrackerViewController: UIViewController {
     let newTrackerViewController = NewTrackerViewController()
     
     private var categories: [TrackerCategory] = []
+    
+    private var saveDate: [SaveDate] = []
+    private var selectedDate: Date?
+    
     private var titleCell = ""
     private var tracker: Tracker = Tracker(
         id: UUID(),
@@ -13,7 +17,6 @@ class TrackerViewController: UIViewController {
         schedule: nil
     )
     
-    private var currenyDate = Date()
     
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")
@@ -68,11 +71,19 @@ class TrackerViewController: UIViewController {
         return searchBar
     }()
     
+    //    private lazy var headerView: UICollectionReusableView = {
+    //       let view = UICollectionReusableView()
+    //        view.translatesAutoresizingMaskIntoConstraints = false
+    //        view.frame = CGRect(x: 0, y: 0, width: 137, height: 18)
+    //        return view
+    //    }()
+    
     private lazy var trackerCollection: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isScrollEnabled = true
         collectionView.backgroundColor = .clear
+        //        collectionView.register(TrackerSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "TrackerSupplementaryView")
         collectionView.register(TrackerCastomCell.self, forCellWithReuseIdentifier: "TrackerCastomCell")
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -110,6 +121,8 @@ class TrackerViewController: UIViewController {
         super.viewDidLoad()
         newTrackerViewController.delegate = self
         self.restorationIdentifier = "TrackerViewController"
+        didChangedDatePicker(datePicker)
+        
         categoriesIsEmpty()
         settingsViewController()
     }
@@ -156,7 +169,24 @@ class TrackerViewController: UIViewController {
         if !categories.isEmpty { screensaver.isHidden = false }
     }
     
+    private func sortAndReloadCollectionView() {
+        if let selectedDate = selectedDate {
+            // Сортируйте массив saveDate на основе выбранной даты
+            let sortedSaveDate = saveDate.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+            // Обновите источник данных коллекции с отсортированными данными
+            // Например, обновите массив saveDate с отсортированными данными и затем вызовите trackerCollection.reloadData()
+            //             saveDate = sortedSaveDate
+            trackerCollection.reloadData()
+        } else {
+            let currentDate = Date()
+            trackerCollection.reloadData()
+        }
+    }
+    
     @objc private func didChangedDatePicker(_ sender: UIDatePicker) {
+        selectedDate = sender.date
+        // Вызовите метод для сортировки и перезагрузки коллекции на основе выбранной даты
+        sortAndReloadCollectionView()
     }
     
     @objc private func tapButtonNewTracker() {
@@ -164,23 +194,60 @@ class TrackerViewController: UIViewController {
     }
 }
 
- // MARK: - extension UICollectionViewDataSource
+// MARK: - extension UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        categories.count
+        //            categories.count
+        //            saveDate.count
+        if let selectedDate = selectedDate {
+            return saveDate.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }.count
+        } else {
+            return 0
+        }
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
-            cell.updateData(title: titleCell, schedule: tracker.schedule, color: tracker.color, emoji: tracker.emoji, label: tracker.name)
-            return cell
+        // Проверяем, что в массиве есть данные и индекс находится в пределах допустимых значений
+        guard categories.indices.contains(indexPath.row) else {
+            // Если массив пуст или индекс выходит за пределы массива, возвращаем пустую ячейку
+            return UICollectionViewCell()
         }
-        return UICollectionViewCell()
+        
+        if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
+            let trackerCategory = categories[indexPath.row]
+            cell.updateData(title: trackerCategory.trackers.first?.name ?? "", schedule: trackerCategory.trackers.first?.schedule, color: trackerCategory.trackers.first?.color, emoji: trackerCategory.trackers.first?.emoji, label: trackerCategory.trackers.first?.name ?? "")
+            // Здесь можно обновить ячейку с данными
+            // Например: cell.data = sortedData[indexPath.row]
+            
+            return cell
+        } else {
+            return UICollectionViewCell()
+        }
     }
 }
 
+//extension TrackerViewController: UICollectionViewDelegate {
+//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+//        guard categories.indices.contains(indexPath.row) else {
+//            return UICollectionReusableView()
+//        }
+//
+//        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "TrackerSupplementaryView", for: indexPath) as? TrackerSupplementaryView {
+//            view.titleLabel.text = "heder"
+//            return view
+//    }
+//    return UICollectionReusableView()
+//    }
+//}
+
 // MARK: - extension UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
+    //    // Реализация метода для указания размеров заголовка
+    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+    //        // Указываем размеры заголовка
+    //        return CGSize(width: collectionView.frame.width, height: 50)
+    //    }
+    
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width / 2.1, height: collectionView.bounds.height / 4)
     }
@@ -207,10 +274,11 @@ extension TrackerViewController: NewHabitDelegate {
         )
         
         categories.append(category)
+        
+        let save = SaveDate(date: Date(), tracker: tracker)
+        saveDate.append(save)
+        
         trackerCollection.reloadData()
-        
-        print(newTracker)
-        
         dismiss(animated: true)
     }
 }

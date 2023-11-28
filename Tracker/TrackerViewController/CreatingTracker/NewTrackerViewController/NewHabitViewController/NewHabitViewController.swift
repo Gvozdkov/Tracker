@@ -307,7 +307,6 @@ extension NewHabitViewController: UITextFieldDelegate {
             let currentText = textField.text ?? ""
             
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
-            
             return newText.count <= 38
         }
         

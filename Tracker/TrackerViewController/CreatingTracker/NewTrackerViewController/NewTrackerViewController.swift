@@ -1,9 +1,10 @@
 import UIKit
 
 final class NewTrackerViewController: UIViewController {
-    weak var delegate: NewHabitDelegate?
     let newHabitViewController = NewHabitViewController()
     let unregulatedEventViewController = UnregulatedEventViewController()
+    
+    weak var delegate: NewHabitDelegate?
     
     lazy private var headingLabel: UILabel = {
         let headingLabel = UILabel()
@@ -65,6 +66,8 @@ final class NewTrackerViewController: UIViewController {
     }
     
     @IBAction private func newHabitButtonAction() {
+    let newHabitViewController = NewHabitViewController() // Создание нового экземпляра
+            newHabitViewController.delegate = self.delegate // Установка делегата
         self.present(newHabitViewController, animated: true)
     }
     

@@ -1,5 +1,10 @@
 import UIKit
 
+struct SaveDate {
+    let date: Date
+    let tracker: Tracker
+}
+
 struct Tracker: Identifiable {
     let id: UUID
     let name: String
@@ -9,7 +14,7 @@ struct Tracker: Identifiable {
 }
 
 
-enum Weekday: String, CaseIterable, Comparable {
+enum Weekday: String, CaseIterable, Comparable, Encodable, Decodable {
     case monday = "Понедельник"
     case tuesday = "Вторник"
     case wednesday = "Среда"

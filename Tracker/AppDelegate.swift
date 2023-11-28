@@ -10,6 +10,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
+        DaysValueTransformer.register()
+        
         return true
         }
         
