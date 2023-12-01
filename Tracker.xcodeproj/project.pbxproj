@@ -149,7 +149,6 @@
 			isa = PBXGroup;
 			children = (
 				E758AE8C2B0ECF840041EECE /* NewTrackerViewController */,
-				E758AEAB2B0ED0CF0041EECE /* UnregulatedEventViewController */,
 			);
 			path = CreatingTracker;
 			sourceTree = "<group>";
@@ -159,6 +158,10 @@
 			children = (
 				E758AE8D2B0ECF8D0041EECE /* NewTrackerViewController.swift */,
 				E758AE8F2B0ECF9B0041EECE /* NewHabitViewController */,
+				E758AEAB2B0ED0CF0041EECE /* UnregulatedEventViewController */,
+				E758AE922B0ECFB10041EECE /* CustomCells */,
+				E758AE9B2B0ED0160041EECE /* CategoryViewController */,
+				E758AEA62B0ED0900041EECE /* ScheduleViewController */,
 			);
 			path = NewTrackerViewController;
 			sourceTree = "<group>";
@@ -167,9 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				E758AE902B0ECFA40041EECE /* NewHabitViewController.swift */,
-				E758AE922B0ECFB10041EECE /* CustomCells */,
-				E758AE9B2B0ED0160041EECE /* CategoryViewController */,
-				E758AEA62B0ED0900041EECE /* ScheduleViewController */,
 			);
 			path = NewHabitViewController;
 			sourceTree = "<group>";

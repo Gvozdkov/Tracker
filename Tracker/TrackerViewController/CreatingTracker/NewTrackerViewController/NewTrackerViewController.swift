@@ -2,7 +2,7 @@ import UIKit
 
 final class NewTrackerViewController: UIViewController {
     let newHabitViewController = NewHabitViewController()
-    let unregulatedEventViewController = UnregulatedEventViewController()
+//    let unregulatedEventViewController = UnregulatedEventViewController()
     
     weak var delegate: NewHabitDelegate?
     
@@ -56,7 +56,7 @@ final class NewTrackerViewController: UIViewController {
             habitButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             habitButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             habitButton.heightAnchor.constraint(equalToConstant: 60),
-
+            
             unregulatedEventButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 471),
             unregulatedEventButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             unregulatedEventButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
@@ -66,12 +66,14 @@ final class NewTrackerViewController: UIViewController {
     }
     
     @IBAction private func newHabitButtonAction() {
-    let newHabitViewController = NewHabitViewController() // Создание нового экземпляра
-            newHabitViewController.delegate = self.delegate // Установка делегата
+        let newHabitViewController = NewHabitViewController() // Создание нового экземпляра
+        newHabitViewController.delegate = self.delegate // Установка делегата
         self.present(newHabitViewController, animated: true)
     }
     
     @IBAction private func unregulatedEvenButtonAction() {
+        let unregulatedEventViewController = UnregulatedEventViewController()
+        
         self.present(unregulatedEventViewController, animated: true)
     }
 }

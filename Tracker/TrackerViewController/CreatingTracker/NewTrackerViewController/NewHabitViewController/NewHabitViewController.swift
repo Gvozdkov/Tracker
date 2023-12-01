@@ -79,6 +79,7 @@ final class NewHabitViewController: UIViewController {
         textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
         textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+    
         textField.delegate = self
         return textField
     }()
@@ -200,7 +201,6 @@ final class NewHabitViewController: UIViewController {
         fillingInTheTracker()
     }
     
-    
     private func settingsViewController() {
         view.backgroundColor = .white
         
@@ -291,7 +291,6 @@ final class NewHabitViewController: UIViewController {
     
     @objc private func tapCancelButton() {
         dismiss(animated: true)
-        print("tapCancelButton")
     }
     
     @objc private func tapCreateButton() {
@@ -309,7 +308,11 @@ extension NewHabitViewController: UITextFieldDelegate {
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
             return newText.count <= 38
         }
-        
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         return true
     }
 }
@@ -338,7 +341,6 @@ extension NewHabitViewController: UITableViewDataSource {
                 fatalError("Error - ButtonSecondCell")
             }
         }
-        
         return UITableViewCell()
     }
 }
@@ -460,7 +462,6 @@ extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == colorsCollection {
             return CGSize(width: collectionView.bounds.width / 8, height: collectionView.bounds.height / 4)
         }
-        
         return CGSize()
     }
 }
