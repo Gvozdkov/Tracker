@@ -98,7 +98,6 @@ final class TrackerCastomCell: UICollectionViewCell {
             titleCell.centerXAnchor.constraint(equalTo: frameView.centerXAnchor),
             titleCell.widthAnchor.constraint(equalToConstant: 149),
             titleCell.heightAnchor.constraint(equalToConstant: 18),
-//            titleCell.bottomAnchor.constraint(equalTo: frameView.topAnchor, constant: 12),
             
             frameView.topAnchor.constraint(equalTo: titleCell.bottomAnchor, constant: 12),
             frameView.widthAnchor.constraint(equalToConstant: 167),

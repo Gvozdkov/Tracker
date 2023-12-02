@@ -1,4 +1,9 @@
 import UIKit
+var trrr: [(date: Date, TrackerCategory)] = []
+struct TrackerCategor  {
+    let name: String
+    let trackers: [Tracker]
+}
 
 struct SaveDate {
     let date: Date

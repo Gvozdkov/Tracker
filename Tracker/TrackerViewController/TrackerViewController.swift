@@ -83,7 +83,7 @@ class TrackerViewController: UIViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isScrollEnabled = true
         collectionView.backgroundColor = .clear
-        //        collectionView.register(TrackerSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "TrackerSupplementaryView")
+        collectionView.register(TrackerSupplementaryView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: TrackerSupplementaryView.hederId)
         collectionView.register(TrackerCastomCell.self, forCellWithReuseIdentifier: "TrackerCastomCell")
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -197,8 +197,6 @@ class TrackerViewController: UIViewController {
 // MARK: - extension UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //            categories.count
-        //            saveDate.count
         if let selectedDate = selectedDate {
             return saveDate.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }.count
         } else {
@@ -226,27 +224,22 @@ extension TrackerViewController: UICollectionViewDataSource {
     }
 }
 
-//extension TrackerViewController: UICollectionViewDelegate {
-//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//        guard categories.indices.contains(indexPath.row) else {
-//            return UICollectionReusableView()
-//        }
-//
-//        if let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "TrackerSupplementaryView", for: indexPath) as? TrackerSupplementaryView {
-//            view.titleLabel.text = "heder"
-//            return view
-//    }
-//    return UICollectionReusableView()
-//    }
-//}
-
+extension TrackerViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
+    
+        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as! TrackerSupplementaryView // 6
+        view.titleLabel.text = saveDate.first?.tracker.name
+        
+        return view
+    }
+}
 // MARK: - extension UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
-    //    // Реализация метода для указания размеров заголовка
-    //    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-    //        // Указываем размеры заголовка
-    //        return CGSize(width: collectionView.frame.width, height: 50)
-    //    }
+        // Реализация метода для указания размеров заголовка
+        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+            // Указываем размеры заголовка
+            return CGSize(width: collectionView.frame.width, height: 50)
+        }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.bounds.width / 2.1, height: collectionView.bounds.height / 4)
