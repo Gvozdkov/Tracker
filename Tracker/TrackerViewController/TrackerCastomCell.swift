@@ -4,15 +4,6 @@ final class TrackerCastomCell: UICollectionViewCell {
     private var counter = 0
     private var imageButton = UIImage(systemName: "plus")
     
-    private lazy var titleCell: UILabel = {
-       let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.font = .bold19
-        label.textColor = .black
-        return label
-    }()
-    
     private lazy var frameView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -49,7 +40,6 @@ final class TrackerCastomCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .medium12
         label.textColor = .white
-        label.text = "This is ok"
         return label
     }()
     
@@ -92,14 +82,8 @@ final class TrackerCastomCell: UICollectionViewCell {
         frameView.addSubview(button)
         
         contentView.addSubview(frameView)
-        contentView.addSubview(titleCell)
         
         NSLayoutConstraint.activate([
-            titleCell.centerXAnchor.constraint(equalTo: frameView.centerXAnchor),
-            titleCell.widthAnchor.constraint(equalToConstant: 149),
-            titleCell.heightAnchor.constraint(equalToConstant: 18),
-            
-            frameView.topAnchor.constraint(equalTo: titleCell.bottomAnchor, constant: 12),
             frameView.widthAnchor.constraint(equalToConstant: 167),
             frameView.heightAnchor.constraint(equalToConstant: 148),
             
@@ -139,7 +123,7 @@ final class TrackerCastomCell: UICollectionViewCell {
     }
     
     func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String?) {
-        titleCell.text = title
+//        titleCell.text = title
         colorView.backgroundColor = color
         emojiLabel.text = emoji
         nameLabel.text = label

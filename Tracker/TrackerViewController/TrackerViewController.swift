@@ -3,9 +3,7 @@ import UIKit
 class TrackerViewController: UIViewController {
     let newTrackerViewController = NewTrackerViewController()
     
-    private var categories: [TrackerCategory] = []
-    
-    private var saveDate: [SaveDate] = []
+    private var saveTrackers: [(date: Date, TrackerCategory)] = []
     private var selectedDate: Date?
     
     private var titleCell = ""
@@ -70,13 +68,6 @@ class TrackerViewController: UIViewController {
         searchBar.backgroundColor = UIColor.textFieldSearch
         return searchBar
     }()
-    
-    //    private lazy var headerView: UICollectionReusableView = {
-    //       let view = UICollectionReusableView()
-    //        view.translatesAutoresizingMaskIntoConstraints = false
-    //        view.frame = CGRect(x: 0, y: 0, width: 137, height: 18)
-    //        return view
-    //    }()
     
     private lazy var trackerCollection: UICollectionView = {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
@@ -166,13 +157,13 @@ class TrackerViewController: UIViewController {
     }
     
     private func categoriesIsEmpty() {
-        if !categories.isEmpty { screensaver.isHidden = false }
+        if !saveTrackers.isEmpty { screensaver.isHidden = false }
     }
     
     private func sortAndReloadCollectionView() {
         if let selectedDate = selectedDate {
             // Сортируйте массив saveDate на основе выбранной даты
-            let sortedSaveDate = saveDate.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+            let sortedSaveDate = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
             // Обновите источник данных коллекции с отсортированными данными
             // Например, обновите массив saveDate с отсортированными данными и затем вызовите trackerCollection.reloadData()
             //             saveDate = sortedSaveDate
@@ -198,7 +189,7 @@ class TrackerViewController: UIViewController {
 extension TrackerViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if let selectedDate = selectedDate {
-            return saveDate.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }.count
+            return saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }.count
         } else {
             return 0
         }
@@ -206,14 +197,14 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Проверяем, что в массиве есть данные и индекс находится в пределах допустимых значений
-        guard categories.indices.contains(indexPath.row) else {
+        guard saveTrackers.indices.contains(indexPath.row) else {
             // Если массив пуст или индекс выходит за пределы массива, возвращаем пустую ячейку
             return UICollectionViewCell()
         }
         
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
-            let trackerCategory = categories[indexPath.row]
-            cell.updateData(title: trackerCategory.trackers.first?.name ?? "", schedule: trackerCategory.trackers.first?.schedule, color: trackerCategory.trackers.first?.color, emoji: trackerCategory.trackers.first?.emoji, label: trackerCategory.trackers.first?.name ?? "")
+            let trackerCategory = saveTrackers[indexPath.row]
+            cell.updateData(title: trackerCategory.1.trackers.first?.name ?? "", schedule: trackerCategory.1.trackers.first?.schedule, color: trackerCategory.1.trackers.first?.color, emoji: trackerCategory.1.trackers.first?.emoji, label: trackerCategory.1.trackers.first?.name ?? "")
             // Здесь можно обновить ячейку с данными
             // Например: cell.data = sortedData[indexPath.row]
             
@@ -228,7 +219,7 @@ extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
     
         let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as! TrackerSupplementaryView // 6
-        view.titleLabel.text = saveDate.first?.tracker.name
+        view.titleLabel.text = saveTrackers.first?.1.name
         
         return view
     }
@@ -266,11 +257,7 @@ extension TrackerViewController: NewHabitDelegate {
             trackers: [tracker]
         )
         
-        categories.append(category)
-        
-        let save = SaveDate(date: Date(), tracker: tracker)
-        saveDate.append(save)
-        
+        saveTrackers.append((date: Date(), category))
         trackerCollection.reloadData()
         dismiss(animated: true)
     }

@@ -1,14 +1,4 @@
 import UIKit
-var trrr: [(date: Date, TrackerCategory)] = []
-struct TrackerCategor  {
-    let name: String
-    let trackers: [Tracker]
-}
-
-struct SaveDate {
-    let date: Date
-    let tracker: Tracker
-}
 
 struct Tracker: Identifiable {
     let id: UUID
