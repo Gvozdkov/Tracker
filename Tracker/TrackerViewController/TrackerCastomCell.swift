@@ -31,7 +31,6 @@ final class TrackerCastomCell: UICollectionViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints =  false
         label.font = .medium16
-        label.text = "🙂"
         return label
     }()
     

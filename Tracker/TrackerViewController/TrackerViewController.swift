@@ -6,16 +6,6 @@ class TrackerViewController: UIViewController {
     private var saveTrackers: [(date: Date, TrackerCategory)] = []
     private var selectedDate: Date?
     
-    private var titleCell = ""
-    private var tracker: Tracker = Tracker(
-        id: UUID(),
-        name: "",
-        emoji: "",
-        color: UIColor(),
-        schedule: nil
-    )
-    
-    
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")
         var buttonNewTracker = UIButton(type: .system)
@@ -149,7 +139,8 @@ class TrackerViewController: UIViewController {
             trackerCollection.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 24),
             trackerCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             trackerCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            trackerCollection.heightAnchor.constraint(equalToConstant: 650),
+//            trackerCollection.heightAnchor.constraint(equalToConstant: 650),
+            trackerCollection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             screensaver.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             screensaver.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor)
@@ -163,13 +154,11 @@ class TrackerViewController: UIViewController {
     private func sortAndReloadCollectionView() {
         if let selectedDate = selectedDate {
             // Сортируйте массив saveDate на основе выбранной даты
-            let sortedSaveDate = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
-            // Обновите источник данных коллекции с отсортированными данными
-            // Например, обновите массив saveDate с отсортированными данными и затем вызовите trackerCollection.reloadData()
-            //             saveDate = sortedSaveDate
+            _ = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+
             trackerCollection.reloadData()
         } else {
-            let currentDate = Date()
+            _ = Date()
             trackerCollection.reloadData()
         }
     }
@@ -205,35 +194,44 @@ extension TrackerViewController: UICollectionViewDataSource {
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
             let trackerCategory = saveTrackers[indexPath.row]
             cell.updateData(title: trackerCategory.1.trackers.first?.name ?? "", schedule: trackerCategory.1.trackers.first?.schedule, color: trackerCategory.1.trackers.first?.color, emoji: trackerCategory.1.trackers.first?.emoji, label: trackerCategory.1.trackers.first?.name ?? "")
-            // Здесь можно обновить ячейку с данными
-            // Например: cell.data = sortedData[indexPath.row]
-            
             return cell
         } else {
             return UICollectionViewCell()
         }
     }
 }
-
 extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-    
-        let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as! TrackerSupplementaryView // 6
-        view.titleLabel.text = saveTrackers.first?.1.name
-        
-        return view
+        if kind == UICollectionView.elementKindSectionHeader {
+            if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as? TrackerSupplementaryView {
+                if let selectedDate = selectedDate {
+                    if saveTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
+                        headerView.titleLabel.text = saveTrackers.first?.1.name
+                    } else {
+                        headerView.titleLabel.text = nil // Установите пустой заголовок, если нет ячеек для выбранной даты
+                    }
+                }
+                return headerView
+            }
+        }
+        return UICollectionReusableView()
     }
 }
+
 // MARK: - extension UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
-        // Реализация метода для указания размеров заголовка
-        func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-            // Указываем размеры заголовка
-            return CGSize(width: collectionView.frame.width, height: 50)
-        }
+    // Реализация метода для указания размеров заголовка
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
+        // Указываем размеры заголовка
+        return CGSize(width: collectionView.frame.width, height: 50)
+    }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.width / 2.1, height: collectionView.bounds.height / 4)
+        return CGSize(width: collectionView.bounds.width / 2 - 7, height: collectionView.bounds.height / 4)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
+        return 7
     }
 }
 
@@ -243,8 +241,8 @@ extension TrackerViewController: NewHabitDelegate {
         questionLabel.text = nil
         starImageView.image = nil
         
-        titleCell = title
-        tracker = Tracker(
+        let titleCell = title
+        let tracker = Tracker(
             id: UUID(),
             name: name,
             emoji: emoji,
