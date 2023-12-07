@@ -19,7 +19,9 @@ final class TrackerCastomCell: UICollectionViewCell {
     private lazy var gradient: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 14
+//        view.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
+//        view.layer.cornerRadius = min(view.bounds.width, view.bounds.height) / 2
+        view.layer.cornerRadius = 12
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
         return view
     }()
@@ -27,7 +29,8 @@ final class TrackerCastomCell: UICollectionViewCell {
     private lazy var emojiLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints =  false
-        label.font = .medium16
+        label.textAlignment = .center
+        label.font = .medium12
         return label
     }()
     
@@ -74,10 +77,11 @@ final class TrackerCastomCell: UICollectionViewCell {
     }
     
     private func constraintsSettingsView() {
-        colorView.addSubview(gradient)
-        colorView.addSubview(emojiLabel)
-        colorView.addSubview(nameLabel)
         frameView.addSubview(colorView)
+        colorView.addSubview(gradient)
+        colorView.addSubview(nameLabel)
+        colorView.addSubview(emojiLabel)
+        gradient.addSubview(emojiLabel)
         frameView.addSubview(dayLabel)
         frameView.addSubview(button)
         
@@ -95,13 +99,12 @@ final class TrackerCastomCell: UICollectionViewCell {
             
             gradient.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 12),
             gradient.leadingAnchor.constraint(equalTo: colorView.leadingAnchor, constant: 12),
-            gradient.widthAnchor.constraint(equalToConstant: 28),
-            gradient.heightAnchor.constraint(equalToConstant: 28),
+            gradient.widthAnchor.constraint(equalToConstant: 24),
+            gradient.heightAnchor.constraint(equalToConstant: 24),
             
-            emojiLabel.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 14),
-            emojiLabel.leadingAnchor.constraint(equalTo: colorView.leadingAnchor, constant: 15.5),
-            emojiLabel.widthAnchor.constraint(equalToConstant: 24),
-            emojiLabel.heightAnchor.constraint(equalToConstant: 24),
+            emojiLabel.centerXAnchor.constraint(equalTo: gradient.centerXAnchor),
+            emojiLabel.centerYAnchor.constraint(equalTo: gradient.centerYAnchor),
+
             
             nameLabel.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 44),
             nameLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -12),
