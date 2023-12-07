@@ -1,9 +1,6 @@
 import UIKit
 
 final class TrackerCastomCell: UICollectionViewCell {
-    private var counter = 0
-    private var imageButton = UIImage(systemName: "plus")
-    
     private lazy var frameView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -61,6 +58,10 @@ final class TrackerCastomCell: UICollectionViewCell {
         button.tintColor = .white
         return button
     }()
+    
+    private var imageButton = UIImage(systemName: "plus")
+    private var counter = 0
+    private var clickProcessing = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -122,7 +123,6 @@ final class TrackerCastomCell: UICollectionViewCell {
     }
     
     func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String?) {
-//        titleCell.text = title
         colorView.backgroundColor = color
         emojiLabel.text = emoji
         nameLabel.text = label
@@ -130,18 +130,36 @@ final class TrackerCastomCell: UICollectionViewCell {
     }
     
     @objc private func tapButton() {
-        if button.alpha == 1.0 {
-            counter += 1
-            dayLabel.text = "\(counter) дней"
-            button.alpha = 0.3
-            imageButton = UIImage(systemName: "checkmark")
-            button.setImage(imageButton, for: .normal)
-        } else {
-            counter -= 1
-            dayLabel.text = "\(counter) дней"
+        let currentDate = Date()
+        let calendar = Calendar.current
+        let currentHour = calendar.component(.hour, from: currentDate)
+        
+                if button.alpha == 1.0 {
+                    counter += 1
+                    dayLabel.text = "\(counter) дней"
+                    button.alpha = 0.3
+                    imageButton = UIImage(systemName: "checkmark")
+                    button.setImage(imageButton, for: .normal)
+                    clickProcessing = true
+                } else {
+                    counter -= 1
+                    dayLabel.text = "\(counter) дней"
+                    button.alpha = 1
+                    imageButton = UIImage(systemName: "plus")
+                    button.setImage(imageButton, for: .normal)
+                    clickProcessing = false
+                }
+        
+        // Проверяем, обновляем ли clickProcessing или нет
+        if currentHour < 24 && !clickProcessing {
+            // Не обновляем clickProcessing до полуночи
+            clickProcessing = true
+        } else if currentHour == 0 {
+            // Сбрасываем clickProcessing в полночь
             button.alpha = 1
             imageButton = UIImage(systemName: "plus")
             button.setImage(imageButton, for: .normal)
+            clickProcessing = false
         }
     }
 }
