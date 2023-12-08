@@ -19,8 +19,6 @@ final class TrackerCastomCell: UICollectionViewCell {
     private lazy var gradient: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-//        view.frame = CGRect(x: 0, y: 0, width: 24, height: 24)
-//        view.layer.cornerRadius = min(view.bounds.width, view.bounds.height) / 2
         view.layer.cornerRadius = 12
         view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 0.3)
         return view
@@ -47,7 +45,7 @@ final class TrackerCastomCell: UICollectionViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = .medium12
         label.textColor = .blackDay
-        label.text = "\(counter) дней"
+        label.text = textDayLabel
         return label
     }()
     
@@ -64,11 +62,11 @@ final class TrackerCastomCell: UICollectionViewCell {
     
     private var imageButton = UIImage(systemName: "plus")
     private var counter = 0
+    private var textDayLabel = "0 дней"
     private var clickProcessing = false
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         constraintsSettingsView()
     }
     
@@ -104,7 +102,6 @@ final class TrackerCastomCell: UICollectionViewCell {
             
             emojiLabel.centerXAnchor.constraint(equalTo: gradient.centerXAnchor),
             emojiLabel.centerYAnchor.constraint(equalTo: gradient.centerYAnchor),
-
             
             nameLabel.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 44),
             nameLabel.bottomAnchor.constraint(equalTo: colorView.bottomAnchor, constant: -12),
@@ -125,33 +122,37 @@ final class TrackerCastomCell: UICollectionViewCell {
         ])
     }
     
-    func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String?) {
-        colorView.backgroundColor = color
-        emojiLabel.text = emoji
-        nameLabel.text = label
-        button.backgroundColor = color
+    private func formatDayText() {
+        switch counter {
+        case 1:
+            dayLabel.text = "\(counter) день"
+        case 2...4:
+            dayLabel.text = "\(counter) дня"
+        default:
+            dayLabel.text = "\(counter) дней"
+        }
     }
     
-    @objc private func tapButton() {
+    private func processTheNumberOfCompletedDays() {
         let currentDate = Date()
         let calendar = Calendar.current
         let currentHour = calendar.component(.hour, from: currentDate)
         
-                if button.alpha == 1.0 {
-                    counter += 1
-                    dayLabel.text = "\(counter) дней"
-                    button.alpha = 0.3
-                    imageButton = UIImage(systemName: "checkmark")
-                    button.setImage(imageButton, for: .normal)
-                    clickProcessing = true
-                } else {
-                    counter -= 1
-                    dayLabel.text = "\(counter) дней"
-                    button.alpha = 1
-                    imageButton = UIImage(systemName: "plus")
-                    button.setImage(imageButton, for: .normal)
-                    clickProcessing = false
-                }
+        if button.alpha == 1.0 {
+            counter += 1
+            formatDayText()
+            button.alpha = 0.3
+            imageButton = UIImage(systemName: "checkmark")
+            button.setImage(imageButton, for: .normal)
+            clickProcessing = true
+        } else {
+            counter -= 1
+            formatDayText()
+            button.alpha = 1
+            imageButton = UIImage(systemName: "plus")
+            button.setImage(imageButton, for: .normal)
+            clickProcessing = false
+        }
         
         // Проверяем, обновляем ли clickProcessing или нет
         if currentHour < 24 && !clickProcessing {
@@ -164,5 +165,16 @@ final class TrackerCastomCell: UICollectionViewCell {
             button.setImage(imageButton, for: .normal)
             clickProcessing = false
         }
+    }
+    
+    func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String?) {
+        colorView.backgroundColor = color
+        emojiLabel.text = emoji
+        nameLabel.text = label
+        button.backgroundColor = color
+    }
+    
+    @objc private func tapButton() {
+        processTheNumberOfCompletedDays()
     }
 }
