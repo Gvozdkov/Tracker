@@ -2,8 +2,7 @@ import UIKit
 
 class TrackerViewController: UIViewController {
     let newTrackerViewController = NewTrackerViewController()
-    
-    private var saveTrackers: [(date: Date, TrackerCategory)] = []
+    private var data = [(header: String, [Tracker])]()
     private var selectedDate: Date?
     
     private lazy var buttonNewTracker: UIButton = {
@@ -30,14 +29,6 @@ class TrackerViewController: UIViewController {
         datePicker.addTarget(self, action: #selector(didChangedDatePicker), for: .valueChanged)
         return datePicker
     }()
-    
-    
-    //    private lazy var dateFormatter: DateFormatter = {
-    //        let dateFormatter = DateFormatter()
-    //        dateFormatter.locale = Locale(identifier: "ru_RU")
-    //        dateFormatter.dateFormat = "dd.MM.yy"
-    //        return dateFormatter
-    //    }()
     
     private lazy var headingLabel: UILabel = {
         let labelHeading = UILabel()
@@ -139,7 +130,6 @@ class TrackerViewController: UIViewController {
             trackerCollection.topAnchor.constraint(equalTo: searchBar.bottomAnchor, constant: 24),
             trackerCollection.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             trackerCollection.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-//            trackerCollection.heightAnchor.constraint(equalToConstant: 650),
             trackerCollection.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             
             screensaver.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
@@ -148,13 +138,13 @@ class TrackerViewController: UIViewController {
     }
     
     private func categoriesIsEmpty() {
-        if !saveTrackers.isEmpty { screensaver.isHidden = false }
+        if !data.isEmpty { screensaver.isHidden = false }
     }
     
     private func sortAndReloadCollectionView() {
         if let selectedDate = selectedDate {
             // Сортируйте массив saveDate на основе выбранной даты
-            _ = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
+//            _ = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
 
             trackerCollection.reloadData()
         } else {
@@ -176,24 +166,28 @@ class TrackerViewController: UIViewController {
 
 // MARK: - extension UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        data.count
+    }
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if let selectedDate = selectedDate {
-            return saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }.count
-        } else {
-            return 0
-        }
+        return data[section].1.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Проверяем, что в массиве есть данные и индекс находится в пределах допустимых значений
-        guard saveTrackers.indices.contains(indexPath.row) else {
+        guard data.indices.contains(indexPath.section) && data[indexPath.section].1.indices.contains(indexPath.item) else {
             // Если массив пуст или индекс выходит за пределы массива, возвращаем пустую ячейку
             return UICollectionViewCell()
         }
         
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
-            let trackerCategory = saveTrackers[indexPath.row]
-            cell.updateData(title: trackerCategory.1.trackers.first?.name ?? "", schedule: trackerCategory.1.trackers.first?.schedule, color: trackerCategory.1.trackers.first?.color, emoji: trackerCategory.1.trackers.first?.emoji, label: trackerCategory.1.trackers.first?.name ?? "")
+            let tracker = data[indexPath.section].1[indexPath.item]
+            cell.updateData(title: tracker.name,
+                            schedule: tracker.schedule,
+                            color: tracker.color,
+                            emoji: tracker.emoji,
+                            label: tracker.name)
             return cell
         } else {
             return UICollectionViewCell()
@@ -204,13 +198,7 @@ extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as? TrackerSupplementaryView {
-                if let selectedDate = selectedDate {
-                    if saveTrackers.contains(where: { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }) {
-                        headerView.titleLabel.text = saveTrackers.first?.1.name
-                    } else {
-                        headerView.titleLabel.text = nil // Установите пустой заголовок, если нет ячеек для выбранной даты
-                    }
-                }
+                headerView.titleLabel.text = data[indexPath.section].header
                 return headerView
             }
         }
@@ -241,8 +229,7 @@ extension TrackerViewController: NewHabitDelegate {
         questionLabel.text = nil
         starImageView.image = nil
         
-        let titleCell = title
-        let tracker = Tracker(
+        let newTracker = Tracker(
             id: UUID(),
             name: name,
             emoji: emoji,
@@ -250,12 +237,13 @@ extension TrackerViewController: NewHabitDelegate {
             schedule: weekday
         )
         
-        let category = TrackerCategory(
-            name: titleCell,
-            trackers: [tracker]
-        )
+        if let existingCategoryIndex = data.firstIndex(where: { $0.header == title }) {
+            data[existingCategoryIndex].1.append(newTracker)
+        } else {
+            let newCategory = (header: title, [newTracker])
+            data.append(newCategory)
+        }
         
-        saveTrackers.append((date: Date(), category))
         trackerCollection.reloadData()
         dismiss(animated: true)
     }
