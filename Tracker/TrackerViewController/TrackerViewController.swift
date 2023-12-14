@@ -3,7 +3,7 @@ import UIKit
 class TrackerViewController: UIViewController {
     let newTrackerViewController = NewTrackerViewController()
     private var data = [(header: String, [Tracker])]()
-    private var selectedDate: Date?
+    private var filteredDays = [(header: String, [Tracker])]()
     
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")
@@ -93,9 +93,7 @@ class TrackerViewController: UIViewController {
         super.viewDidLoad()
         newTrackerViewController.delegate = self
         self.restorationIdentifier = "TrackerViewController"
-        didChangedDatePicker(datePicker)
-        
-        categoriesIsEmpty()
+        didChangedDatePicker()
         settingsViewController()
     }
     
@@ -138,25 +136,100 @@ class TrackerViewController: UIViewController {
     }
     
     private func categoriesIsEmpty() {
-        if !data.isEmpty { screensaver.isHidden = false }
+        let selectedDate = datePicker.date
+        let calendar = Calendar.current
+        let selectedWeekday = calendar.component(.weekday, from: selectedDate)
+        
+        let cellsExist = false
+        
+        // Проверяем наличие ячеек в отфильтрованных днях
+        for (_, trackers) in data {
+            let filteredTrackers = trackers.filter { tracker in
+                if let schedule = tracker.schedule {
+                    return schedule.contains(where: { $0.rawValue == localizedWeekday(from: selectedWeekday) })
+                }
+                return false
+            }
+            if !filteredTrackers.isEmpty {
+                screensaver.isHidden = true
+            } else {
+                screensaver.isHidden = false
+            }
+        }
+        
+        // Управляем отображением "заглушки" (screensaver)
+        screensaver.isHidden = cellsExist
     }
     
-    private func sortAndReloadCollectionView() {
-        if let selectedDate = selectedDate {
-            // Сортируйте массив saveDate на основе выбранной даты
-//            _ = saveTrackers.filter { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
-
-            trackerCollection.reloadData()
-        } else {
-            _ = Date()
-            trackerCollection.reloadData()
+    private func localizedWeekday(from weekday: Int) -> String {
+        switch weekday {
+        case 1: return "Воскресенье"
+        case 2: return "Понедельник"
+        case 3: return "Вторник"
+        case 4: return "Среда"
+        case 5: return "Четверг"
+        case 6: return "Пятница"
+        case 7: return "Суббота"
+        default: return ""
         }
     }
     
-    @objc private func didChangedDatePicker(_ sender: UIDatePicker) {
-        selectedDate = sender.date
-        // Вызовите метод для сортировки и перезагрузки коллекции на основе выбранной даты
-        sortAndReloadCollectionView()
+    private func filteredSelectedDay() {
+        // Получение выбранной даты из datePicker
+        let selectedDate = datePicker.date
+        
+        // Получение текущего календаря
+        let calendar = Calendar.current
+        
+        // Получение дня недели для выбранной даты
+        let selectedWeekday = calendar.component(.weekday, from: selectedDate)
+        
+        // Получение локализованной строки для выбранного дня недели
+        let localizedWeekdayString = localizedWeekday(from: selectedWeekday)
+        
+        // Создание пустого массива кортежей (String, [Tracker])
+        var updatedFilteredDays = [(String, [Tracker])]()
+        
+        // Итерация через все элементы в data, где каждый элемент представляет собой категорию и список трекеров
+        for (category, trackers) in data {
+            // Переменная для хранения индекса существующей секции
+            var existingSectionIndex: Int?
+            
+            // Поиск существующей секции для текущей категории в массиве updatedFilteredDays
+            for (index, filteredSection) in updatedFilteredDays.enumerated() {
+                if filteredSection.0 == category {
+                    existingSectionIndex = index
+                    break
+                }
+            }
+            
+            // Фильтрация трекеров в текущей категории на основе выбранного дня недели
+            let filteredTrackers = trackers.filter { tracker in
+                if let schedule = tracker.schedule {
+                    return schedule.contains(where: { $0.rawValue == localizedWeekdayString })
+                }
+                return false
+            }
+            
+            // Проверка, что отфильтрованный список трекеров не пустой
+            if !filteredTrackers.isEmpty {
+                // Если существует секция для данной категории, добавляем отфильтрованные трекеры в эту секцию
+                if let existingIndex = existingSectionIndex {
+                    updatedFilteredDays[existingIndex].1 += filteredTrackers
+                } else {
+                    // В противном случае, создаем новую секцию с соответствующей категорией и отфильтрованными трекерами
+                    updatedFilteredDays.append((category, filteredTrackers))
+                }
+            }
+        }
+        // Обновление массива filteredDays данными из updatedFilteredDays
+        filteredDays = updatedFilteredDays
+        
+        trackerCollection.reloadData()
+    }
+    
+    @objc func didChangedDatePicker() {
+        filteredSelectedDay()
     }
     
     @objc private func tapButtonNewTracker() {
@@ -167,22 +240,22 @@ class TrackerViewController: UIViewController {
 // MARK: - extension UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        data.count
+        filteredDays.count
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return data[section].1.count
+        return filteredDays[section].1.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         // Проверяем, что в массиве есть данные и индекс находится в пределах допустимых значений
-        guard data.indices.contains(indexPath.section) && data[indexPath.section].1.indices.contains(indexPath.item) else {
+        guard filteredDays.indices.contains(indexPath.section) && filteredDays[indexPath.section].1.indices.contains(indexPath.item) else {
             // Если массив пуст или индекс выходит за пределы массива, возвращаем пустую ячейку
             return UICollectionViewCell()
         }
         
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
-            let tracker = data[indexPath.section].1[indexPath.item]
+            let tracker = filteredDays[indexPath.section].1[indexPath.item]
             cell.updateData(title: tracker.name,
                             schedule: tracker.schedule,
                             color: tracker.color,
@@ -194,17 +267,19 @@ extension TrackerViewController: UICollectionViewDataSource {
         }
     }
 }
+
 extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             if let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TrackerSupplementaryView.hederId, for: indexPath) as? TrackerSupplementaryView {
-                headerView.titleLabel.text = data[indexPath.section].header
+                headerView.titleLabel.text = filteredDays[indexPath.section].header
                 return headerView
             }
         }
         return UICollectionReusableView()
     }
 }
+
 
 // MARK: - extension UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
@@ -237,13 +312,14 @@ extension TrackerViewController: NewHabitDelegate {
             schedule: weekday
         )
         
-        if let existingCategoryIndex = data.firstIndex(where: { $0.header == title }) {
+        if let existingCategoryIndex = filteredDays.firstIndex(where: { $0.header == title }) {
             data[existingCategoryIndex].1.append(newTracker)
         } else {
             let newCategory = (header: title, [newTracker])
             data.append(newCategory)
         }
         
+        didChangedDatePicker()
         trackerCollection.reloadData()
         dismiss(animated: true)
     }
