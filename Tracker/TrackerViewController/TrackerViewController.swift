@@ -135,30 +135,12 @@ class TrackerViewController: UIViewController {
         ])
     }
     
-    private func categoriesIsEmpty() {
-        let selectedDate = datePicker.date
-        let calendar = Calendar.current
-        let selectedWeekday = calendar.component(.weekday, from: selectedDate)
-        
-        let cellsExist = false
-        
-        // Проверяем наличие ячеек в отфильтрованных днях
-        for (_, trackers) in data {
-            let filteredTrackers = trackers.filter { tracker in
-                if let schedule = tracker.schedule {
-                    return schedule.contains(where: { $0.rawValue == localizedWeekday(from: selectedWeekday) })
-                }
-                return false
-            }
-            if !filteredTrackers.isEmpty {
-                screensaver.isHidden = true
-            } else {
-                screensaver.isHidden = false
-            }
+    private func filteredDaysIsEmpty() {
+        if filteredDays.isEmpty {
+            screensaver.isHidden = false
+        } else {
+            screensaver.isHidden = true
         }
-        
-        // Управляем отображением "заглушки" (screensaver)
-        screensaver.isHidden = cellsExist
     }
     
     private func localizedWeekday(from weekday: Int) -> String {
@@ -224,7 +206,7 @@ class TrackerViewController: UIViewController {
         }
         // Обновление массива filteredDays данными из updatedFilteredDays
         filteredDays = updatedFilteredDays
-        
+        filteredDaysIsEmpty()
         trackerCollection.reloadData()
     }
     
@@ -301,9 +283,9 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - extension NewHabitDelegate
 extension TrackerViewController: NewHabitDelegate {
     func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?) {
-        questionLabel.text = nil
-        starImageView.image = nil
-        
+//        questionLabel.text = nil
+//        starImageView.image = nil
+//        
         let newTracker = Tracker(
             id: UUID(),
             name: name,
