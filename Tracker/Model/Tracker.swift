@@ -39,19 +39,3 @@ enum Weekday: String, CaseIterable, Comparable, Encodable, Decodable {
         return first < second
     }
 }
-
-//extension Weekday {
-//    func toDate() -> Date? {
-//        let inputWeekday = self.rawValue
-//        let formatter = DateFormatter()
-//        formatter.locale = Locale(identifier: "ru_RU")
-//        formatter.dateFormat = "EEEE"
-//        guard let date = formatter.date(from: inputWeekday) else {
-//            return nil
-//        }
-//        let currentWeekday = Calendar.current.component(.weekday, from: Date())
-//        let inputWeekdayIndex = Calendar.current.component(.weekday, from: date)
-//        let difference = inputWeekdayIndex - currentWeekday
-//        return Calendar.current.date(byAdding: .day, value: difference, to: Date())
-//    }
-//}

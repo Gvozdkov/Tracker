@@ -283,9 +283,6 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 // MARK: - extension NewHabitDelegate
 extension TrackerViewController: NewHabitDelegate {
     func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?) {
-//        questionLabel.text = nil
-//        starImageView.image = nil
-//        
         let newTracker = Tracker(
             id: UUID(),
             name: name,
