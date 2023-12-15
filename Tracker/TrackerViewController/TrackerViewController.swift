@@ -47,6 +47,7 @@ class TrackerViewController: UIViewController {
         searchBar.placeholder = text
         searchBar.frame = CGRect(x: 0, y: 0, width: 343, height: 36)
         searchBar.backgroundColor = UIColor.textFieldSearch
+        searchBar.delegate = self
         return searchBar
     }()
     
@@ -209,13 +210,45 @@ class TrackerViewController: UIViewController {
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
     }
-    
+
     @objc func didChangedDatePicker() {
         filteredSelectedDay()
     }
     
     @objc private func tapButtonNewTracker() {
         self.present(newTrackerViewController, animated: true)
+    }
+}
+// MARK: - extension UISearchBarDelegate
+extension TrackerViewController: UISearchBarDelegate {
+    // Метод для обработки изменений в тексте searchBar
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            // Если строка поиска пуста, отображаем все данные для выбранного дня
+            filteredSelectedDay()
+        } else {
+            // Фильтруем данные на основе введенного запроса
+            let filteredData = data.compactMap { (header, trackers) in
+                let filteredTrackers = trackers.filter { tracker in
+                    // Здесь можно указать условие для фильтрации по вашим критериям
+                    let nameMatch = tracker.name.lowercased().contains(searchText.lowercased())
+                    let headerMatch = header.lowercased().contains(searchText.lowercased())
+                    return nameMatch || headerMatch
+                }
+                if !filteredTrackers.isEmpty {
+                    return (header, filteredTrackers)
+                } else {
+                    return nil
+                }
+            }
+            filteredDays = filteredData
+            filteredDaysIsEmpty()
+            trackerCollection.reloadData()
+        }
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
     }
 }
 
@@ -261,8 +294,6 @@ extension TrackerViewController: UICollectionViewDelegate {
         return UICollectionReusableView()
     }
 }
-
-
 // MARK: - extension UICollectionViewDelegate
 extension TrackerViewController: UICollectionViewDelegateFlowLayout {
     // Реализация метода для указания размеров заголовка
