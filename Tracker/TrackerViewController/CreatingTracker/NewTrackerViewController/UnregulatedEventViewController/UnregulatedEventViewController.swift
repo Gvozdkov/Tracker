@@ -131,7 +131,7 @@ final class UnregulatedEventViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.titleLabel?.textColor = .red
         button.setAttributedTitle(attributedString, for: .normal)
-        //        button.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapCancelButton), for: .touchUpInside)
         return button
     }()
     
@@ -268,6 +268,10 @@ final class UnregulatedEventViewController: UIViewController {
     
     @objc private func tapCreateButton() {
         delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: [.monday, .tuesday, .wednesday, .thurshday, .friday, .saturday, .sunday])
+    }
+    
+    @objc private func tapCancelButton() {
+        dismiss(animated: true)
     }
 }
 
