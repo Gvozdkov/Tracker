@@ -1,6 +1,7 @@
 import UIKit
 
 final class UnregulatedEventViewController: UIViewController {
+    weak var delegate: NewHabitDelegate?
     
     private let categoryViewController = CategoryViewController()
     
@@ -17,7 +18,7 @@ final class UnregulatedEventViewController: UIViewController {
     ]
     
     private var subCategory = ""
-  
+    
     private var name: String = "" {
         didSet {
             fillingInTheTracker()
@@ -57,10 +58,10 @@ final class UnregulatedEventViewController: UIViewController {
         textField.leftView = leftPaddingView
         textField.leftViewMode = .always
         
-                textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
-                textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
-                textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-                textField.delegate = self
+        textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
+        textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
+        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        textField.delegate = self
         return textField
     }()
     
@@ -91,9 +92,9 @@ final class UnregulatedEventViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isScrollEnabled = false
-                collectionView.register(EmojiCustomCell.self, forCellWithReuseIdentifier: "EmojiCustomCell")
-                collectionView.dataSource = self
-                collectionView.delegate = self
+        collectionView.register(EmojiCustomCell.self, forCellWithReuseIdentifier: "EmojiCustomCell")
+        collectionView.dataSource = self
+        collectionView.delegate = self
         return collectionView
     }()
     
@@ -109,9 +110,9 @@ final class UnregulatedEventViewController: UIViewController {
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: UICollectionViewFlowLayout())
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.isScrollEnabled = false
-                collectionView.register(ColorCustomCell.self, forCellWithReuseIdentifier: "ColorCustomCell")
-                collectionView.dataSource = self
-                collectionView.delegate = self
+        collectionView.register(ColorCustomCell.self, forCellWithReuseIdentifier: "ColorCustomCell")
+        collectionView.dataSource = self
+        collectionView.delegate = self
         return collectionView
     }()
     
@@ -144,7 +145,7 @@ final class UnregulatedEventViewController: UIViewController {
         button.layer.cornerRadius = 16
         button.titleLabel?.textColor = .white
         button.setAttributedTitle(attributedString, for: .normal)
-        //        button.addTarget(self, action: #selector(tapCreateButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(tapCreateButton), for: .touchUpInside)
         return button
     }()
     
@@ -177,7 +178,7 @@ final class UnregulatedEventViewController: UIViewController {
         settingsViewController()
         categoryViewController.delegate = self
     }
-
+    
     private func settingsViewController() {
         view.backgroundColor = .white
         
@@ -263,6 +264,10 @@ final class UnregulatedEventViewController: UIViewController {
         if name == "" {
             createButton.backgroundColor = .gray
         }
+    }
+    
+    @objc private func tapCreateButton() {
+        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: nil)
     }
 }
 

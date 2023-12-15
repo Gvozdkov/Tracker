@@ -73,7 +73,7 @@ final class NewTrackerViewController: UIViewController {
     
     @IBAction private func unregulatedEvenButtonAction() {
         let unregulatedEventViewController = UnregulatedEventViewController()
-        
+        unregulatedEventViewController.delegate = self.delegate
         self.present(unregulatedEventViewController, animated: true)
     }
 }
