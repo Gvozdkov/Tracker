@@ -17,22 +17,22 @@ final class UnregulatedEventViewController: UIViewController {
     ]
     
     private var subCategory = ""
-    
+  
     private var name: String = "" {
         didSet {
-//            fillingInTheTracker()
+            fillingInTheTracker()
         }
     }
     
     private var emoji: String = "" {
         didSet {
-//            fillingInTheTracker()
+            fillingInTheTracker()
         }
     }
     
     private var color: UIColor = .clear {
         didSet {
-//            fillingInTheTracker()
+            fillingInTheTracker()
         }
     }
     
@@ -57,10 +57,10 @@ final class UnregulatedEventViewController: UIViewController {
         textField.leftView = leftPaddingView
         textField.leftViewMode = .always
         
-        //        textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
-        //        textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
-        //        textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        //        textField.delegate = self
+                textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
+                textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
+                textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+                textField.delegate = self
         return textField
     }()
     
@@ -175,6 +175,7 @@ final class UnregulatedEventViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         settingsViewController()
+        categoryViewController.delegate = self
     }
 
     private func settingsViewController() {
@@ -233,6 +234,36 @@ final class UnregulatedEventViewController: UIViewController {
             stackButton.heightAnchor.constraint(equalToConstant: 60),
         ])
     }
+    
+    private func fillingInTheTracker() {
+        if name != "" && subCategory != "" && emoji != "" && color != .clear {
+            createButton.backgroundColor = .blackDay
+            createButton.isEnabled = true
+        } else {
+            createButton.isEnabled = false
+        }
+    }
+    
+    @objc private func editingDidBeginTextField(_ textField: UITextField) {
+        if textField.text == "Введите название трекера" {
+            textField.text = ""
+            textField.textColor = .black
+        }
+    }
+    
+    @objc private func editingDidEndTextField(_ textField: UITextField) {
+        if textField.text?.isEmpty ?? true {
+            textField.text = "Введите название трекера"
+            textField.textColor = .gray
+        }
+    }
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+        name = textField.text ?? ""
+        if name == "" {
+            createButton.backgroundColor = .gray
+        }
+    }
 }
 
 // MARK: - extension UITextFieldDelegate
@@ -244,6 +275,11 @@ extension UnregulatedEventViewController: UITextFieldDelegate {
             let newText = (currentText as NSString).replacingCharacters(in: range, with: string)
             return newText.count <= 38
         }
+        return true
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
         return true
     }
 }
@@ -268,7 +304,7 @@ extension UnregulatedEventViewController: UITableViewDataSource {
 // MARK: - extension UITableViewDelegate
 extension UnregulatedEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        present(categoryViewController, animated: true)
+        present(categoryViewController, animated: true, completion: nil)
     }
 }
 
@@ -372,5 +408,15 @@ extension UnregulatedEventViewController: UICollectionViewDelegateFlowLayout {
             return CGSize(width: collectionView.bounds.width / 8, height: collectionView.bounds.height / 4)
         }
         return CGSize()
+    }
+}
+
+extension UnregulatedEventViewController: SubCategoryProtocol {
+    func selectedCategory(category: String?) {
+        if let category = category {
+            subCategory = category
+        }
+        buttonTableView.reloadData()
+        dismiss(animated: true, completion: nil)
     }
 }

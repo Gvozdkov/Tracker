@@ -472,7 +472,7 @@ extension NewHabitViewController: SubCategoryProtocol {
             subCategory = category
         }
         buttonTableView.reloadData()
-        dismiss(animated: true)
+        dismiss(animated: true, completion: nil)
     }
 }
 

@@ -9,7 +9,6 @@ final class ScheduleViewController: UIViewController {
     
     private let scheduleCastomCell = ScheduleCastomCell()
     
-    //    private var isOnSwitch = false
     private var selectedWeekdays: Set<Weekday> = []
     
     private lazy var headingLabel: UILabel = {
