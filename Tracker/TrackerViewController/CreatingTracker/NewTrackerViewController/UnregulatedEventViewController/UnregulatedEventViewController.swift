@@ -1,14 +1,23 @@
 import UIKit
 
-protocol NewHabitDelegate: AnyObject {
-    func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?)
-}
-
-final class NewHabitViewController: UIViewController {
+final class UnregulatedEventViewController: UIViewController {
     weak var delegate: NewHabitDelegate?
     
     private let categoryViewController = CategoryViewController()
-    private let scheduleViewController = ScheduleViewController()
+    
+    private let emojis = [
+        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
+        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
+        "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
+    ]
+    
+    private let colors = [
+        #colorLiteral(red: 0.9919999838, green: 0.2980000079, blue: 0.2860000134, alpha: 1), #colorLiteral(red: 1, green: 0.5329999924, blue: 0.1180000007, alpha: 1), #colorLiteral(red: 0, green: 0.4819999933, blue: 0.9800000191, alpha: 1), #colorLiteral(red: 0.4309999943, green: 0.2669999897, blue: 0.9959999919, alpha: 1), #colorLiteral(red: 0.200000003, green: 0.8119999766, blue: 0.4120000005, alpha: 1), #colorLiteral(red: 0.90200001, green: 0.4269999862, blue: 0.8309999704, alpha: 1),
+        #colorLiteral(red: 0.976000011, green: 0.8309999704, blue: 0.8309999704, alpha: 1), #colorLiteral(red: 0.2039999962, green: 0.6549999714, blue: 0.9959999919, alpha: 1), #colorLiteral(red: 0.275000006, green: 0.90200001, blue: 0.6159999967, alpha: 1), #colorLiteral(red: 0.2080000043, green: 0.2039999962, blue: 0.4860000014, alpha: 1), #colorLiteral(red: 1, green: 0.4040000141, blue: 0.3019999862, alpha: 1), #colorLiteral(red: 1, green: 0.6000000238, blue: 0.8000000119, alpha: 1),
+        #colorLiteral(red: 0.9649999738, green: 0.7689999938, blue: 0.5450000167, alpha: 1), #colorLiteral(red: 0.474999994, green: 0.5799999833, blue: 0.9610000253, alpha: 1), #colorLiteral(red: 0.5139999986, green: 0.172999993, blue: 0.9449999928, alpha: 1), #colorLiteral(red: 0.6779999733, green: 0.3370000124, blue: 0.8550000191, alpha: 1), #colorLiteral(red: 0.5529999733, green: 0.4469999969, blue: 0.90200001, alpha: 1), #colorLiteral(red: 0.1840000004, green: 0.8159999847, blue: 0.3449999988, alpha: 1)
+    ]
+    
+    private var subCategory = ""
     
     private var name: String = "" {
         didSet {
@@ -28,38 +37,11 @@ final class NewHabitViewController: UIViewController {
         }
     }
     
-    private var weekday: [Weekday]? {
-        didSet {
-            fillingInTheTracker()
-        }
-    }
-    
-    private var scheduleString: String? {
-        guard let schedule = weekday else { return nil } // проверяет выбранны дни недели или нет, если выбраны возвращает дни
-        if weekday?.count == Weekday.allCases.count { return "Каждый день" } // если все дни были выбранны выводится надпись "Каждый день"
-        let shortForms: [String] = schedule.map { $0.shortForm } //преобразовывает выбраные дни в сокращеный форм
-        return shortForms.joined(separator: ", ") // сдесь эелементы массива объединяются в одну строчку разделеными ,
-    }
-    
-    private var subCategory = ""
-    
-    private let emojis = [
-        "🙂", "😻", "🌺", "🐶", "❤️", "😱",
-        "😇", "😡", "🥶", "🤔", "🙌", "🍔",
-        "🥦", "🏓", "🥇", "🎸", "🏝", "😪"
-    ]
-    
-    private let colors = [
-        #colorLiteral(red: 0.9919999838, green: 0.2980000079, blue: 0.2860000134, alpha: 1), #colorLiteral(red: 1, green: 0.5329999924, blue: 0.1180000007, alpha: 1), #colorLiteral(red: 0, green: 0.4819999933, blue: 0.9800000191, alpha: 1), #colorLiteral(red: 0.4309999943, green: 0.2669999897, blue: 0.9959999919, alpha: 1), #colorLiteral(red: 0.200000003, green: 0.8119999766, blue: 0.4120000005, alpha: 1), #colorLiteral(red: 0.90200001, green: 0.4269999862, blue: 0.8309999704, alpha: 1),
-        #colorLiteral(red: 0.976000011, green: 0.8309999704, blue: 0.8309999704, alpha: 1), #colorLiteral(red: 0.2039999962, green: 0.6549999714, blue: 0.9959999919, alpha: 1), #colorLiteral(red: 0.275000006, green: 0.90200001, blue: 0.6159999967, alpha: 1), #colorLiteral(red: 0.2080000043, green: 0.2039999962, blue: 0.4860000014, alpha: 1), #colorLiteral(red: 1, green: 0.4040000141, blue: 0.3019999862, alpha: 1), #colorLiteral(red: 1, green: 0.6000000238, blue: 0.8000000119, alpha: 1),
-        #colorLiteral(red: 0.9649999738, green: 0.7689999938, blue: 0.5450000167, alpha: 1), #colorLiteral(red: 0.474999994, green: 0.5799999833, blue: 0.9610000253, alpha: 1), #colorLiteral(red: 0.5139999986, green: 0.172999993, blue: 0.9449999928, alpha: 1), #colorLiteral(red: 0.6779999733, green: 0.3370000124, blue: 0.8550000191, alpha: 1), #colorLiteral(red: 0.5529999733, green: 0.4469999969, blue: 0.90200001, alpha: 1), #colorLiteral(red: 0.1840000004, green: 0.8159999847, blue: 0.3449999988, alpha: 1)
-    ]
-    
-    private lazy var headingLabel: UILabel = {
+    lazy private var headingLabel: UILabel = {
         let headingLabel = UILabel()
-        headingLabel.translatesAutoresizingMaskIntoConstraints = false
         headingLabel.font = .medium16
-        headingLabel.text = "Новая привычка"
+        headingLabel.text = "Новое нерегулярное событие"
+        headingLabel.translatesAutoresizingMaskIntoConstraints = false
         return headingLabel
     }()
     
@@ -79,7 +61,6 @@ final class NewHabitViewController: UIViewController {
         textField.addTarget(self, action: #selector(editingDidBeginTextField(_:)), for: .editingDidBegin)
         textField.addTarget(self, action: #selector(editingDidEndTextField(_:)), for: .editingDidEnd)
         textField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-    
         textField.delegate = self
         return textField
     }()
@@ -94,7 +75,6 @@ final class NewHabitViewController: UIViewController {
         tableView.separatorStyle = .singleLine
         tableView.separatorInset = .init(top: tableView.bounds.height / 2, left: 15, bottom: tableView.bounds.height / 2, right: 15)
         tableView.register(ButtonFirstCell.self, forCellReuseIdentifier: "ButtonFirstCell")
-        tableView.register(ButtonSecondCell.self, forCellReuseIdentifier: "ButtonSecondCell")
         tableView.dataSource = self
         tableView.delegate = self
         return tableView
@@ -195,10 +175,8 @@ final class NewHabitViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        categoryViewController.delegate = self
-        scheduleViewController.delegate = self
         settingsViewController()
-        fillingInTheTracker()
+        categoryViewController.delegate = self
     }
     
     private func settingsViewController() {
@@ -233,7 +211,7 @@ final class NewHabitViewController: UIViewController {
             buttonTableView.topAnchor.constraint(equalTo: nameTrackerTextField.bottomAnchor, constant: 24),
             buttonTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             buttonTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            buttonTableView.heightAnchor.constraint(equalToConstant: 150),
+            buttonTableView.heightAnchor.constraint(equalToConstant: 75),
             
             emojiLabel.topAnchor.constraint(equalTo: buttonTableView.bottomAnchor, constant: 32),
             emojiLabel.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 28),
@@ -259,7 +237,7 @@ final class NewHabitViewController: UIViewController {
     }
     
     private func fillingInTheTracker() {
-        if name != "" && emoji != "" && weekday != nil && color != .clear {
+        if name != "" && subCategory != "" && emoji != "" && color != .clear {
             createButton.backgroundColor = .blackDay
             createButton.isEnabled = true
         } else {
@@ -287,20 +265,18 @@ final class NewHabitViewController: UIViewController {
             createButton.backgroundColor = .gray
         }
     }
-
+    
+    @objc private func tapCreateButton() {
+        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: [.monday, .tuesday, .wednesday, .thurshday, .friday, .saturday, .sunday])
+    }
     
     @objc private func tapCancelButton() {
         dismiss(animated: true)
     }
-    
-    @objc private func tapCreateButton() {
-        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: weekday)
-    }
 }
 
-
 // MARK: - extension UITextFieldDelegate
-extension NewHabitViewController: UITextFieldDelegate {
+extension UnregulatedEventViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if textField == nameTrackerTextField {
             let currentText = textField.text ?? ""
@@ -318,48 +294,28 @@ extension NewHabitViewController: UITextFieldDelegate {
 }
 
 // MARK: - extension UITableViewDataSource
-extension NewHabitViewController: UITableViewDataSource {
+extension UnregulatedEventViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 2
+        return 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if indexPath.item == 0 {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonFirstCell", for: indexPath) as? ButtonFirstCell {
-                cell.backgroundColor = .clear
-                cell.subCategory.text = subCategory
-                return cell
-            } else {
-                fatalError("Error - ButtonFirstCell")
-            }
-        } else if indexPath.item == 1 {
-            if let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonSecondCell", for: indexPath) as? ButtonSecondCell {
-                cell.backgroundColor = .clear
-                cell.Label.text = scheduleString
-                return cell
-            } else {
-                fatalError("Error - ButtonSecondCell")
-            }
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "ButtonFirstCell", for: indexPath) as? ButtonFirstCell {
+            cell.backgroundColor = .clear
+            cell.subCategory.text = subCategory
+            return cell
+        } else {
+            fatalError("Error - ButtonFirstCell")
         }
-        return UITableViewCell()
     }
 }
-
 
 // MARK: - extension UITableViewDelegate
-extension NewHabitViewController: UITableViewDelegate {
+extension UnregulatedEventViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        if indexPath.row == 0 {
-            present(categoryViewController, animated: true)
-            
-        } else {
-            present(scheduleViewController, animated: true)
-        }
+        present(categoryViewController, animated: true, completion: nil)
     }
 }
-
 
 // MARK: - extetion UIImage
 private extension UIImage {
@@ -383,7 +339,7 @@ private extension UIImage {
 }
 
 // MARK: - extetion UICollectionViewDataSource
-extension NewHabitViewController: UICollectionViewDataSource {
+extension UnregulatedEventViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == emojisCollection {
             return emojis.count
@@ -411,9 +367,8 @@ extension NewHabitViewController: UICollectionViewDataSource {
     }
 }
 
-
 // MARK: - extetion UICollectionViewDelegate
-extension NewHabitViewController: UICollectionViewDelegate {
+extension UnregulatedEventViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == emojisCollection {
             let selectedEmogi = emojis[indexPath.item]
@@ -452,9 +407,8 @@ extension NewHabitViewController: UICollectionViewDelegate {
     }
 }
 
-
 // MARK: - extetion UICollectionViewDelegateFlowLayout
-extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
+extension UnregulatedEventViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         if collectionView == emojisCollection {
             return CGSize(width: collectionView.bounds.width / 7.5, height: collectionView.bounds.height / 4)
@@ -466,20 +420,12 @@ extension NewHabitViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension NewHabitViewController: SubCategoryProtocol {
+extension UnregulatedEventViewController: SubCategoryProtocol {
     func selectedCategory(category: String?) {
         if let category = category {
             subCategory = category
         }
         buttonTableView.reloadData()
         dismiss(animated: true, completion: nil)
-    }
-}
-
-extension NewHabitViewController: ScheduleViewControllerDelegate {
-    func didConfirm(_ schedule: [Weekday]) {
-        weekday = schedule
-        buttonTableView.reloadData()
-        dismiss(animated: true)
     }
 }
