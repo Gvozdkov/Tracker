@@ -1,6 +1,12 @@
 import UIKit
 
+protocol TrackerCellDelegate: AnyObject {
+    func trackerRecord(tracker:Tracker, completed: Bool)
+}
+
 final class TrackerCastomCell: UICollectionViewCell {
+    weak var delegate: TrackerCellDelegate?
+    
     private lazy var frameView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -63,11 +69,21 @@ final class TrackerCastomCell: UICollectionViewCell {
     private var imageButton = UIImage(systemName: "plus")
     private var counter = 0
     private var textDayLabel = "0 дней"
-    private var clickProcessing = false
+
+    private var tracker: Tracker = Tracker(id: UUID(), name: "", emoji: "", color: .black, schedule: [])
+    private var trackerCompleted: Bool = false {
+        didSet {
+            executionDayCheck()
+        }
+    }
+    
+//    private var trackerRecord = TrackerRecord(trackerId: UUID(), date: Date())
+    
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         constraintsSettingsView()
+        executionDayCheck()
     }
     
     required init?(coder: NSCoder) {
@@ -133,48 +149,48 @@ final class TrackerCastomCell: UICollectionViewCell {
         }
     }
     
-    private func processTheNumberOfCompletedDays() {
-        let currentDate = Date()
-        let calendar = Calendar.current
-        let currentHour = calendar.component(.hour, from: currentDate)
-        
-        if button.alpha == 1.0 {
-            counter += 1
+//    func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String, trackerRecord: TrackerRecord, trackerCompleted: Bool) {
+    
+    func updateData(tracker: Tracker, trackerCompleted: Bool) {
+        colorView.backgroundColor = tracker.color
+        emojiLabel.text = tracker.emoji
+        nameLabel.text = tracker.name
+        button.backgroundColor = tracker.color
+        self.trackerCompleted = trackerCompleted
+        self.tracker = tracker
+//        self.trackerRecord = trackerRecord
+
+//        print("передал в ячейку \(trackerRecord) \(trackerCompleted)")
+    }
+    
+    private func executionDayCheck() {
+        switch trackerCompleted {
+        case true:
             formatDayText()
             button.alpha = 0.3
             imageButton = UIImage(systemName: "checkmark")
             button.setImage(imageButton, for: .normal)
-            clickProcessing = true
-        } else {
-            counter -= 1
+            
+        case false:
             formatDayText()
             button.alpha = 1
             imageButton = UIImage(systemName: "plus")
             button.setImage(imageButton, for: .normal)
-            clickProcessing = false
         }
-        
-        // Проверяем, обновляем ли clickProcessing или нет
-        if currentHour < 24 && !clickProcessing {
-            // Не обновляем clickProcessing до полуночи
-            clickProcessing = true
-        } else if currentHour == 0 {
-            // Сбрасываем clickProcessing в полночь
-            button.alpha = 1
-            imageButton = UIImage(systemName: "plus")
-            button.setImage(imageButton, for: .normal)
-            clickProcessing = false
-        }
-    }
-    
-    func updateData(title: String, schedule: [Weekday]?, color: UIColor?, emoji: String?, label: String?) {
-        colorView.backgroundColor = color
-        emojiLabel.text = emoji
-        nameLabel.text = label
-        button.backgroundColor = color
     }
     
     @objc private func tapButton() {
-        processTheNumberOfCompletedDays()
+        if trackerCompleted {
+            counter -= 1
+            executionDayCheck()
+            trackerCompleted = !trackerCompleted
+        } else {
+            counter += 1
+            executionDayCheck()
+            trackerCompleted = !trackerCompleted
+        }
+        delegate?.trackerRecord(tracker: tracker, completed: trackerCompleted)
+        print("отправил через делегат  \(tracker) \(trackerCompleted)")
     }
 }
+

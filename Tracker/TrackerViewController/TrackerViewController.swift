@@ -2,8 +2,16 @@ import UIKit
 
 class TrackerViewController: UIViewController {
     let newTrackerViewController = NewTrackerViewController()
+    let trackerCastomCell = TrackerCastomCell()
     private var data = [(header: String, [Tracker])]()
     private var filteredDays = [(header: String, [Tracker])]()
+    //    private var trackerRecords = [(TrackerRecord, completed: Bool)]()
+    private var trackerRecords = Set <TrackerRecord>()
+    private var completedTracker = false {
+        didSet {
+            
+        }
+    }
     
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")
@@ -25,7 +33,7 @@ class TrackerViewController: UIViewController {
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
         datePicker.locale = Locale(identifier: "ru_RU")
-        datePicker.maximumDate = Date()
+        //        datePicker.maximumDate = Date()
         datePicker.addTarget(self, action: #selector(didChangedDatePicker), for: .valueChanged)
         return datePicker
     }()
@@ -92,6 +100,7 @@ class TrackerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        trackerCastomCell.delegate = self
         newTrackerViewController.delegate = self
         self.restorationIdentifier = "TrackerViewController"
         didChangedDatePicker()
@@ -210,7 +219,7 @@ class TrackerViewController: UIViewController {
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
     }
-
+    
     @objc func didChangedDatePicker() {
         filteredSelectedDay()
     }
@@ -271,17 +280,23 @@ extension TrackerViewController: UICollectionViewDataSource {
         
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
             let tracker = filteredDays[indexPath.section].1[indexPath.item]
-            cell.updateData(title: tracker.name,
-                            schedule: tracker.schedule,
-                            color: tracker.color,
-                            emoji: tracker.emoji,
-                            label: tracker.name)
+
+    
+            if trackerRecords.contains(where: { $0.trackerId == tracker.id }) {
+                cell.updateData(tracker: tracker, trackerCompleted: true)
+            } else {
+                cell.updateData(tracker: tracker, trackerCompleted: false)
+            }
+            
+            
+            
             return cell
         } else {
             return UICollectionViewCell()
         }
     }
 }
+
 
 extension TrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -332,5 +347,37 @@ extension TrackerViewController: NewHabitDelegate {
         didChangedDatePicker()
         trackerCollection.reloadData()
         dismiss(animated: true)
+    }
+}
+
+extension TrackerViewController: TrackerCellDelegate {
+    
+    func addToCopletedTrackers(tracker: Tracker, date: Date) {
+        let trackerRecord = TrackerRecord(trackerId: tracker.id, date: date)
+        trackerRecords.insert(trackerRecord)
+    }
+    
+    func removeCopletedTrackers(tracker: Tracker, date: Date) {
+        let trackerRecord = TrackerRecord(trackerId: tracker.id, date: date)
+        if let recordToRemove = trackerRecords.first(where: { $0.trackerId == trackerRecord.trackerId }) {
+            trackerRecords.remove(recordToRemove)
+        } else {
+            trackerRecords.insert(trackerRecord)
+        }
+    }
+    
+    
+    func trackerRecord(tracker: Tracker, completed: Bool) {
+        trackerCollection.reloadData()
+        if completed {
+            addToCopletedTrackers(tracker: tracker, date: datePicker.date)
+            print("app \(tracker) and \(completed)")
+           
+        } else {
+            removeCopletedTrackers(tracker: tracker, date: datePicker.date)
+            print("remove \(tracker) and \(completed)")
+
+        }
+        trackerCollection.reloadData()
     }
 }

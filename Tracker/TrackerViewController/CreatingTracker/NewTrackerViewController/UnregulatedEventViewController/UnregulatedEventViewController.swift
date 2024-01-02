@@ -267,7 +267,11 @@ final class UnregulatedEventViewController: UIViewController {
     }
     
     @objc private func tapCreateButton() {
-        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: [.monday, .tuesday, .wednesday, .thurshday, .friday, .saturday, .sunday])
+        delegate?.newTracker(title: subCategory, 
+                             name: name,
+                             emoji: emoji,
+                             color: color,
+                             weekday: [.monday, .tuesday, .wednesday, .thurshday, .friday, .saturday, .sunday])
     }
     
     @objc private func tapCancelButton() {
