@@ -1,7 +1,60 @@
-/* 
-  Localizable.strings
-  Tracker
+// MARK: - Doublons
+"trackersText" = "Trackers";
+"enterAName" = "Enter the name of the tracker";
+"category" = "Category";
+"done" = "Done";
+"statistics" = "Statistics";
+"schedule" = "Schedule";
 
-  Created by Алексей Гвоздков on 15.03.2024.
-  
-*/
+// MARK: - OnboardingViewController
+"onboardingVCBigHeadline1" = "Sed ut perspiciatis";
+"onboardingVCBigHeadline2" = "unde omnis iste natus";
+"onboardingVCLitleHeadline1" = "Sed ut perspiciatis unde omnis iste";
+"onboardingVCLitleHeadline2" = "natus error sit voluptatem";
+"onboardingVCToBeginButton" = "Start";
+
+// MARK: - TrackerViewController
+"trackerVCSearchBar" = "Search";
+"trackerVCQuestionLabelFirst" = "Add the first tracker";
+"trackerVCQuestionLabelNo" = "Nothing was found";
+
+// MARK: - NewTrackerViewController
+"newTrackerVCHeadingLabel" = "Creating a tracker";
+"newTrackerVCHabitButton" = "Habit";
+"newTrackerVCUnregulatedEventButton" = "Unregulated event";
+
+
+// MARK: - NewHabitViewController / UnregulatedEventViewController
+"newHabitVCEveryday" = "Every day";
+"newHabitVCHeadingLabel" = "New habit";
+"newHabitVCColorLabel" = "Color";
+"newHabitVCCancelButton" = "Cancel";
+"newHabitVCCreateButton" = "Create";
+
+// MARK: - CategoryViewController
+"categoryVCQuestionLabel" = "There are no categories yet";
+"categoryVCHabitButton" = "Add a category";
+"categoryVCQuestionLabelText" = "There are no categories yet";
+
+// MARK: - NewCategoryViewController
+"newCategoryVCHeadingLabel" = "New catagory";
+
+// MARK: - StatisticViewController
+"statisticVCQuestionLabel" = "There is nothing to analyze yet";
+
+// MARK: - Weekday
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";
+
+"mon" = "Mon";
+"tue" = "Tue";
+"wed" = "Wed";
+"thu" = "Thu";
+"fri" = "Fri";
+"sat" = "Sat";
+"sun" = "Sun";

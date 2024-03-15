@@ -1,8 +1,45 @@
-//
-//  LocalizableKeys.swift
-//  Tracker
-//
-//  Created by Алексей Гвоздков on 14.03.2024.
-//
-
 import Foundation
+
+enum LocalizableKeys {
+    static let trackersText = "trackersText".localised()
+    static let enterAName = "enterAName".localised()
+    static let category = "category".localised()
+    static let done = "done".localised()
+    static let statistics = "statistics".localised()
+    static let onboardingVCBigHeadline1 = "onboardingVCBigHeadline1".localised()
+    static let onboardingVCBigHeadline2 = "onboardingVCBigHeadline2".localised()
+    static let onboardingVCLitleHeadline1 = "onboardingVCLitleHeadline1".localised()
+    static let onboardingVCLitleHeadline2 = "onboardingVCLitleHeadline2".localised()
+    static let onboardingVCToBeginButton = "onboardingVCToBeginButton".localised()
+    static let trackerVCSearchBar = "trackerVCSearchBar".localised()
+    static let trackerVCQuestionLabelFirst = "trackerVCQuestionLabelFirst".localised()
+    static let trackerVCQuestionLabelNo = "trackerVCQuestionLabelNo".localised()
+    static let newTrackerVCHeadingLabel = "newTrackerVCHeadingLabel".localised()
+    static let newTrackerVCHabitButton = "newTrackerVCHabitButton".localised()
+    static let newTrackerVCUnregulatedEventButton = "newTrackerVCUnregulatedEventButton".localised()
+    static let newHabitVCEveryday = "newHabitVCEveryday".localised()
+    static let newHabitVCHeadingLabel = "newHabitVCHeadingLabel".localised()
+    static let newHabitVCColorLabel = "newHabitVCColorLabel".localised()
+    static let newHabitVCCancelButton = "newHabitVCCancelButton".localised()
+    static let newHabitVCCreateButton = "newHabitVCCreateButton".localised()
+    static let categoryVCQuestionLabel = "categoryVCQuestionLabel".localised()
+    static let categoryVCHabitButton = "categoryVCHabitButton".localised()
+    static let categoryVCQuestionLabelText = "categoryVCQuestionLabelText".localised()
+    static let newCategoryVCHeadingLabel = "newCategoryVCHeadingLabel".localised()
+    static let schedules = "schedule".localised()
+    static let statisticVCQuestionLabel = "statisticVCQuestionLabel".localised()
+    static let monday = "monday".localised()
+    static let tuesday = "tuesday".localised()
+    static let wednesday = "wednesday".localised()
+    static let thursday = "thursday".localised()
+    static let friday = "friday".localised()
+    static let saturday = "saturday".localised()
+    static let sunday = "sunday".localised()
+    static let mon = "mon".localised()
+    static let tue = "tue".localised()
+    static let wed = "wed".localised()
+    static let thu = "thu".localised()
+    static let fri = "fri".localised()
+    static let sat = "sat".localised()
+    static let sun = "sun".localised()
+}

@@ -1,8 +1,6 @@
-//
-//  TrackerCategory.swift
-//  Tracker
-//
-//  Created by Алексей Гвоздков on 15.03.2024.
-//
+import UIKit
 
-import Foundation
+struct TrackerCategory: Hashable {
+    let name: String
+    let trackers: [Tracker]
+}

@@ -1,7 +1,60 @@
-/* 
-  Localizable.strings
-  Tracker
+// MARK: - Doublons
+"trackersText" = "Трекеры";
+"enterAName" = "Введите название трекера";
+"category" = "Категория";
+"done" = "Готово";
+"statistics" = "Статистика";
+"schedule" = "Расписание";
 
-  Created by Алексей Гвоздков on 15.03.2024.
-  
-*/
+// MARK: - OnboardingViewController
+"onboardingVCBigHeadline1" = "То, что является перспективой";
+"onboardingVCBigHeadline2" = "для всего сущего, есть природа";
+"onboardingVCLitleHeadline1" = "То, что ты видишь во всем - это ошибка,";
+"onboardingVCLitleHeadline2" = "которая приводит к сладострастию";
+"onboardingVCToBeginButton" = "Начать";
+
+// MARK: - TrackerViewController
+"trackerVCSearchBar" = "Поиск";
+"trackerVCQuestionLabelFirst" = "Добавьте первый трекер";
+"trackerVCQuestionLabelNo" = "Ничего не найдено";
+
+// MARK: - NewTrackerViewController
+"newTrackerVCHeadingLabel" = "Создание трекера";
+"newTrackerVCHabitButton" = "Привычка";
+"newTrackerVCUnregulatedEventButton" = "Нерегулируемое событие";
+
+
+// MARK: - NewHabitViewController / UnregulatedEventViewController
+"newHabitVCEveryday" = "Каждый день";
+"newHabitVCHeadingLabel" = "Новая привычка";
+"newHabitVCColorLabel" = "Цвет";
+"newHabitVCCancelButton" = "Отменить";
+"newHabitVCCreateButton" = "Создать";
+
+// MARK: - CategoryViewController
+"categoryVCQuestionLabel" = "Категорий еще нет";
+"categoryVCHabitButton" = "Добавить категорию";
+"categoryVCQuestionLabelText" = "Категорий еще нет";
+
+// MARK: - NewCategoryViewController
+"newCategoryVCHeadingLabel" = "Новая категория";
+
+// MARK: - StatisticViewController
+"statisticVCQuestionLabel" = "Анализировать пока нечего";
+
+// MARK: - Weekday
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
+
+"mon" = "Пн";
+"tue" = "Вт";
+"wed" = "Ср";
+"thu" = "Чт";
+"fri" = "Пт";
+"sat" = "Сб";
+"sun" = "Вс";
