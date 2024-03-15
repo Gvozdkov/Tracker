@@ -111,7 +111,7 @@ class TrackerViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        AnalyticsService.openScreenReport(screen: .main)
+        AnalyticsService.openScreenReport(screen: .main)
         do {
             if let fetchedTrackerRecords = try trackerRecordStore.fetchAllTrackerRecordCoreData(trackerRecords) {
                 trackerRecords = fetchedTrackerRecords.map { record in
@@ -146,7 +146,7 @@ class TrackerViewController: UIViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-//        AnalyticsService.closeScreenReport(screen: .main)
+        AnalyticsService.closeScreenReport(screen: .main)
     }
     
     private func settingsViewController() {
@@ -496,7 +496,7 @@ class TrackerViewController: UIViewController {
     }
     
     @objc private func tapButtonNewTracker() {
-//        AnalyticsService.addTrackReport()
+        AnalyticsService.addTrackReport()
         self.present(newTrackerViewController, animated: true)
     }
     
@@ -504,7 +504,7 @@ class TrackerViewController: UIViewController {
         view.endEditing(true)
     }
     @objc private func tapfiltersButton() {
-//        AnalyticsService.addFilterReport()
+        AnalyticsService.addFilterReport()
         self.present(filtersViewController, animated: true)
     }
 }
@@ -549,19 +549,19 @@ extension TrackerViewController: UISearchBarDelegate {
 
             // Пункт "Открепить" или "Закрепить"
             let pinUnpinAction = UIAction(title: "Закрепить", image: nil) { _ in
-//                AnalyticsService.clickRecordTrackReport()
+                AnalyticsService.clickRecordTrackReport()
             }
             menuActions.append(pinUnpinAction)
 
             // Пункт "Редактировать"
             let editAction = UIAction(title: "Редактировать", image: nil) { _ in
-//                AnalyticsService.editTrackReport()
+                AnalyticsService.editTrackReport()
             }
             menuActions.append(editAction)
 
             // Пункт "Удалить"
             let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-//                AnalyticsService.deleteTrackReport()
+                AnalyticsService.deleteTrackReport()
                 // Здесь запускается флоу удаления привычки
                 let trackerToDelete = self.data[indexPath.section].1[indexPath.row]
                 // Perform deletion logic here using the trackerToDelete object
@@ -605,7 +605,7 @@ extension TrackerViewController: UICollectionViewDataSource {
 
             if trackerRecords.first(where: { $0.trackerId == tracker.id && $0.date == currentDate}) != nil {
                 cell.updateData(tracker: tracker, click: true, counterDays: eventText)
-//                AnalyticsService.clickTrackerReport()
+                AnalyticsService.clickTrackerReport()
             } else {
                 cell.updateData(tracker: tracker, click: false, counterDays: eventText)
                 

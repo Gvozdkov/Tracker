@@ -1,6 +1,6 @@
 import UIKit
 import CoreData
-//import YandexMobileMetrica
+import YandexMobileMetrica
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -22,11 +22,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-//        guard let configuration = YMMYandexMetricaConfiguration(apiKey: "0d92a9e7-f6bf-48dc-bdea-a737f59b5176") else { // используйте ваш ключ
-//            return true
-//        }
-//            
-//        YMMYandexMetrica.activate(with: configuration)
+        guard let configuration = YMMYandexMetricaConfiguration(apiKey: "0d92a9e7-f6bf-48dc-bdea-a737f59b5176") else { // используйте ваш ключ
+            return true
+        }
+            
+        YMMYandexMetrica.activate(with: configuration)
         return true
     }
     
