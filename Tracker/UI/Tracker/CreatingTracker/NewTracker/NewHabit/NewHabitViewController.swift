@@ -268,6 +268,15 @@ final class NewHabitViewController: UIViewController {
         }
     }
     
+    func editTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?) {
+        self.subCategory = title
+        nameTrackerTextField.text = name
+        self.emoji = emoji
+        self.color = color
+        print("получил и обновляю \(self.color)")
+        self.weekday = weekday
+    }
+    
     @objc private func editingDidBeginTextField(_ textField: UITextField) {
         if textField.text == LocalizableKeys.enterAName {
             textField.text = ""
@@ -403,7 +412,7 @@ extension NewHabitViewController: UICollectionViewDataSource {
         } else if collectionView == colorsCollection {
             if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCustomCell", for: indexPath) as? ColorCustomCell {
                 let color = colors[indexPath.item] // Получаем цвет из массива
-                let image = UIImage(color: color) // Создаем из него UIImage (для этого вам может потребоваться расширение UIImage)
+                let image = UIImage(color: color)
                 cell.cellSettings(colorsImage: image)
                 return cell
             }
@@ -426,6 +435,7 @@ extension NewHabitViewController: UICollectionViewDelegate {
             print(emoji)
         } else if collectionView == colorsCollection {
             let selectedColor = colors[indexPath.item]
+
             if let cell = collectionView.cellForItem(at: indexPath) {
                 cell.layer.cornerRadius = 8
                 cell.layer.borderWidth = 3

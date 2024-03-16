@@ -1,6 +1,7 @@
 import UIKit
 
 class TrackerViewController: UIViewController {
+    
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
@@ -8,12 +9,14 @@ class TrackerViewController: UIViewController {
     private let trackerCastomCell = TrackerCastomCell()
     private let filtersViewController = FiltersViewController()
     private let statisticViewController = StatisticViewController()
+    private let newHabitViewController = NewHabitViewController()
  
     private var data = [(header: String, [Tracker])]()
     private var filteredDays = [(header: String, [Tracker])]()
     private var trackerRecords = [TrackerRecord]()
     private var currentDate = Date()
     private var currentFilter: String = "Все трекеры"
+    private var uppdateTracker: Tracker?
     
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")?.withTintColor(ColorsForTheTheme.shared.buttonAction, renderingMode: .alwaysOriginal)
@@ -539,49 +542,129 @@ extension TrackerViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
     
-    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-//        let tracker = data[indexPath.row]// получите объект Tracker для данного indexPath
-
-        // Создание контекстного меню
-        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-            // Создание пунктов меню
-            var menuActions: [UIMenuElement] = []
-
-            // Пункт "Открепить" или "Закрепить"
-            let pinUnpinAction = UIAction(title: "Закрепить", image: nil) { _ in
-                AnalyticsService.clickRecordTrackReport()
-            }
-            menuActions.append(pinUnpinAction)
-
-            // Пункт "Редактировать"
-            let editAction = UIAction(title: "Редактировать", image: nil) { _ in
-                AnalyticsService.editTrackReport()
-            }
-            menuActions.append(editAction)
-
-            // Пункт "Удалить"
-            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-                AnalyticsService.deleteTrackReport()
-                // Здесь запускается флоу удаления привычки
-                let trackerToDelete = self.data[indexPath.section].1[indexPath.row]
-                // Perform deletion logic here using the trackerToDelete object
-                do {
-                    try self.trackerStore.deleteTracker(trackerToDelete)
-                    // Optionally, update the UI or perform any necessary actions after deletion
-                } catch {
-                    // Handle error during deletion, if necessary
+    //    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
+    ////        let tracker = data[indexPath.row]// получите объект Tracker для данного indexPath
+    //
+    //        // Создание контекстного меню
+    //        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+    //            // Создание пунктов меню
+    //            var menuActions: [UIMenuElement] = []
+    //
+    //            // Пункт "Открепить" или "Закрепить"
+    //            let pinUnpinAction = UIAction(title: "Закрепить", image: nil) { _ in
+    //                AnalyticsService.clickRecordTrackReport()
+    //            }
+    //            menuActions.append(pinUnpinAction)
+    //
+    //            // Пункт "Редактировать"
+    //            let editAction = UIAction(title: "Редактировать", image: nil) { _ in
+    //                AnalyticsService.editTrackReport()
+    //                guard let tracker = self.uppdateTracker else { return }
+    //                self.newHabitViewController.editTracker(title: "header", name: tracker.name, emoji: tracker.emoji, color: tracker.color, weekday: tracker.schedule)
+    //                self.present(self.newHabitViewController, animated: true)
+    //            }
+    //            menuActions.append(editAction)
+    //
+    //            // Пункт "Удалить"
+    //            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
+    //                AnalyticsService.deleteTrackReport()
+    //                // Здесь запускается флоу удаления привычки
+    //                let trackerToDelete = self.data[indexPath.section].1[indexPath.row]
+    //                // Perform deletion logic here using the trackerToDelete object
+    //                do {
+    //                    try self.trackerStore.deleteTracker(trackerToDelete)
+    //                    // Optionally, update the UI or perform any necessary actions after deletion
+    //                } catch {
+    //                    // Handle error during deletion, if necessary
+    //                }
+    //            }
+    //            menuActions.append(deleteAction)
+    //
+    //            // Создание и возвращение меню
+    //            return UIMenu(title: "", children: menuActions)
+    //        }
+    //
+    //        return configuration
+    //    }
+    
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfiguration configuration: UIContextMenuConfiguration, highlightPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
+        let targetView = configurationTargetView(indexPath: indexPath)
+        return UITargetedPreview(view: targetView.0, parameters: targetView.1)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfiguration configuration: UIContextMenuConfiguration, dismissalPreviewForItemAt indexPath: IndexPath) -> UITargetedPreview? {
+        let targetView = configurationTargetView(indexPath: indexPath)
+        return UITargetedPreview(view: targetView.0, parameters: targetView.1)
+    }
+    
+    private func configurationTargetView(indexPath: IndexPath) -> (UIView, UIPreviewParameters) {
+        guard let cell = trackerCollection.cellForItem(at: indexPath) as? TrackerCastomCell else { return (UIView(), UIPreviewParameters())}
+        let parameters = UIPreviewParameters()
+        parameters.backgroundColor = .clear
+        let targetView = cell.colorView
+        return (targetView, parameters)
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemsAt indexPaths: [IndexPath], point: CGPoint) -> UIContextMenuConfiguration? {
+        guard let indexPath = indexPaths.first else { return nil }
+        
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell else { return nil }
+        
+        var pinTracker: Bool // Assume you have a variable to track if the tracker is pinned or not
+        
+        // Your logic for checking if the tracker cell is pinned
+        // For example:
+        let pinned = pinnedTrackerCell(cell: cell, indexPath: indexPath, date: datePicker.date)
+        pinTracker = !pinned
+        
+        let menu = UIMenu(
+            children: [
+                UIAction(title: pinTracker ? "Открепить" : "Закрепить") { [weak self] _ in
+                    // Your action for pinning/unpinning tracker
+                    if pinTracker {
+                        self?.makePin(indexPath: indexPath)
+                    } else {
+                        self?.makeUnpin(indexPath: indexPath)
+                    }
+                },
+                UIAction(title: "Редактировать") { [weak self] _ in
+                    // Your action for editing tracker
+                    // ...
+                },
+                UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive) { [weak self] _ in
+                    // Your action for deleting tracker
+                    // ...
                 }
-            }
-            menuActions.append(deleteAction)
-
-            // Создание и возвращение меню
-            return UIMenu(title: "", children: menuActions)
+            ])
+        
+        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
+            return menu
         }
-
+        
         return configuration
     }
+    
+    func pinnedTrackerCell(cell: TrackerCastomCell, indexPath: IndexPath, date: Date) -> Bool {
+        // Implement your logic to check if the tracker cell is pinned based on the provided cell, index path, and date
+        // Return true if the cell is pinned, false otherwise
+        return true // Placeholder return value, replace with actual logic
+    }
+    
+    func makePin(indexPath: IndexPath) {
+        // Action to pin the tracker at the specified index path
+        // ...
+    }
+    
+    func makeUnpin(indexPath: IndexPath) {
+        // Action to unpin the tracker at the specified index path
+        // ...
+    }
 }
-
 // MARK: - extension UICollectionViewDataSource
 extension TrackerViewController: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -597,10 +680,12 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let header = filteredDays[indexPath.section].0
         let tracker = filteredDays[indexPath.section].1[indexPath.item]
+        uppdateTracker = tracker
         let counterDays = getTotalDateCount(forTrackerId: tracker.id)
         let eventText = filterTrackerEvent(tracker, counterDays)
-        
+
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
 
             if trackerRecords.first(where: { $0.trackerId == tracker.id && $0.date == currentDate}) != nil {

@@ -14,7 +14,7 @@ final class TrackerCastomCell: UICollectionViewCell {
         return view
     }()
     
-    private lazy var colorView: UIView = {
+    lazy var colorView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.layer.cornerRadius = 12
