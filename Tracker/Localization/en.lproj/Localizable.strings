@@ -5,6 +5,7 @@
 "done" = "Done";
 "statistics" = "Statistics";
 "schedule" = "Schedule";
+"filters" = "Filters";
 
 // MARK: - OnboardingViewController
 "onboardingVCBigHeadline1" = "Track only";
@@ -18,11 +19,16 @@
 "trackerVCQuestionLabelFirst" = "Add the first tracker";
 "trackerVCQuestionLabelNo" = "Nothing was found";
 
+// MARK: - FiltersViewController
+"allTrackers" = "All trackers";
+"trackersForToday" = "Trackers for today";
+"completed" = "Completed";
+"notCompleted" = "Not completed";
+
 // MARK: - NewTrackerViewController
 "newTrackerVCHeadingLabel" = "Creating a tracker";
 "newTrackerVCHabitButton" = "Habit";
 "newTrackerVCUnregulatedEventButton" = "Unregulated event";
-
 
 // MARK: - NewHabitViewController / UnregulatedEventViewController
 "newHabitVCEveryday" = "Every day";
@@ -34,8 +40,8 @@
 // MARK: - CategoryViewController
 "categoryVCQuestionLabel" = "There are no categories yet";
 "categoryVCHabitButton" = "Add a category";
-"categoryVCQuestionLabelText" = "There are no categories yet";
-
+"categoryVCQuestionLabelText1" = "Habits and events can be";
+"categoryVCQuestionLabelText2" = "combine by meaning";
 // MARK: - NewCategoryViewController
 "newCategoryVCHeadingLabel" = "New catagory";
 

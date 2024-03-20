@@ -106,7 +106,7 @@ class TrackerViewController: UIViewController {
     private let filtersButton: UIButton = {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.setTitle("Фильтры", for: .normal)
+        button.setTitle(LocalizableKeys.filters, for: .normal)
         button.backgroundColor = .blue
         button.layer.cornerRadius = 16
         button.addTarget(self, action: #selector(tapfiltersButton), for: .touchUpInside)
@@ -411,15 +411,15 @@ class TrackerViewController: UIViewController {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         
         switch currentFilter {
-            case "Все трекеры":
+        case LocalizableKeys.allTrackers:
                 filteredSelectedDay()
-            case "Трекеры на сегодня":
+        case LocalizableKeys.trackersForToday:
                 currentDate = Calendar.current.startOfDay(for: Date())
                 datePicker.setDate(currentDate, animated: true)
                 filteredSelectedDay()
-            case "Завершенные":
+        case LocalizableKeys.completed:
                 showCompletedTrackersForSelectedDay()
-            case "Не завершенные":
+        case LocalizableKeys.notCompleted:
                 showUncompletedTrackersForSelectedDay()
             default:
                 break

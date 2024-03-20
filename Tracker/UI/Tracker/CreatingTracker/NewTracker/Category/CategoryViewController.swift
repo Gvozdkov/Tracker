@@ -125,7 +125,7 @@ final class CategoryViewController: UIViewController {
     private func userCategoryIsEmpty() {
         if viewModel.model.userCategory.isEmpty {
             userCategoryTableView.isHidden = true
-            questionLabel.text = LocalizableKeys.categoryVCQuestionLabelText
+            questionLabel.text = "\(LocalizableKeys.categoryVCQuestionLabelText1) \n\(LocalizableKeys.categoryVCQuestionLabelText2)"
             starImageView.image = UIImage(named: "Star")
         } else {
             userCategoryTableView.isHidden = false

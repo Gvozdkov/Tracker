@@ -6,12 +6,12 @@ protocol FiltersDelegate: AnyObject {
 final class FiltersViewController: UIViewController {
     weak var delegate: FiltersDelegate?
     private var selectedRow: Int?
-    private let filtersName = ["Все трекеры", "Трекеры на сегодня", "Завершенные", "Не завершенные"]
+    private let filtersName = [LocalizableKeys.allTrackers, LocalizableKeys.trackersForToday, LocalizableKeys.completed, LocalizableKeys.notCompleted]
     private lazy var headingLabel: UILabel = {
         let headingLabel = UILabel()
         headingLabel.translatesAutoresizingMaskIntoConstraints = false
         headingLabel.font = .medium16
-        headingLabel.text = "Фильтры"
+        headingLabel.text = LocalizableKeys.filters
         return headingLabel
     }()
     
@@ -33,7 +33,6 @@ final class FiltersViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //            newCategoryViewController.delegate = self
         settingsViewController()
     }
     

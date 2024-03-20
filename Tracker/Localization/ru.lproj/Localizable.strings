@@ -5,6 +5,7 @@
 "done" = "Готово";
 "statistics" = "Статистика";
 "schedule" = "Расписание";
+"filters" = "Фильтры";
 
 // MARK: - OnboardingViewController
 "onboardingVCBigHeadline1" = "Отслеживайте только";
@@ -18,11 +19,16 @@
 "trackerVCQuestionLabelFirst" = "Добавьте первый трекер";
 "trackerVCQuestionLabelNo" = "Ничего не найдено";
 
+// MARK: - FiltersViewController
+"allTrackers" = "Все трекеры";
+"trackersForToday" = "Трекеры на сегодня";
+"completed" = "Завершенные";
+"notCompleted" = "Не завершенные";
+
 // MARK: - NewTrackerViewController
 "newTrackerVCHeadingLabel" = "Создание трекера";
 "newTrackerVCHabitButton" = "Привычка";
 "newTrackerVCUnregulatedEventButton" = "Нерегулируемое событие";
-
 
 // MARK: - NewHabitViewController / UnregulatedEventViewController
 "newHabitVCEveryday" = "Каждый день";
@@ -34,7 +40,8 @@
 // MARK: - CategoryViewController
 "categoryVCQuestionLabel" = "Категорий еще нет";
 "categoryVCHabitButton" = "Добавить категорию";
-"categoryVCQuestionLabelText" = "Категорий еще нет";
+"categoryVCQuestionLabelText1" = "Привычки и события можно";
+"categoryVCQuestionLabelText2" = "объединить по смыслу";
 
 // MARK: - NewCategoryViewController
 "newCategoryVCHeadingLabel" = "Новая категория";
