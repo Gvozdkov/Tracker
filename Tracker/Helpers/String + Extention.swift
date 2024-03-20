@@ -1,8 +1,10 @@
-//
-//  String + Extention.swift
-//  Tracker
-//
-//  Created by Алексей Гвоздков on 14.03.2024.
-//
-
 import Foundation
+
+extension String {
+    func localised() -> String {
+        NSLocalizedString(self,
+                          tableName: "Localizable",
+                          value: self,
+                          comment: self)
+    }
+}

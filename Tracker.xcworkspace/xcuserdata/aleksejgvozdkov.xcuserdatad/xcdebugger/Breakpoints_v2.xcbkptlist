@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "45D53AC5-E11B-4FB6-9C25-0EF73AD0AE20"
+   type = "0"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "48B41D54-D141-4D01-BB32-8A7267E28E5C"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "275"
+            endingLineNumber = "275"
+            landmarkName = "editTracker(title:name:emoji:color:weekday:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "9961944D-89A7-4101-85A4-7F7CA3DCD1F1"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "276"
+            endingLineNumber = "276"
+            landmarkName = "editTracker(title:name:emoji:color:weekday:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "BBD064C1-C076-4D28-9B62-A9DA452679B0"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
+            landmarkName = "collectionView(_:didSelectItemAt:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "BBD064C1-C076-4D28-9B62-A9DA452679B0 - 24ec0e69a5ced6c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.NewHabitViewController.collectionView(_: __C.UICollectionView, didSelectItemAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "439"
+                  endingLineNumber = "439"
+                  offsetFromSymbolStart = "1492">
+               </Location>
+               <Location
+                  uuid = "BBD064C1-C076-4D28-9B62-A9DA452679B0 - 24ec0e69a5ced6c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.NewHabitViewController.collectionView(_: __C.UICollectionView, didSelectItemAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "439"
+                  endingLineNumber = "439"
+                  offsetFromSymbolStart = "1664">
+               </Location>
+               <Location
+                  uuid = "BBD064C1-C076-4D28-9B62-A9DA452679B0 - 24ec0e69a5ced6c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.NewHabitViewController.collectionView(_: __C.UICollectionView, didSelectItemAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "439"
+                  endingLineNumber = "439"
+                  offsetFromSymbolStart = "1536">
+               </Location>
+               <Location
+                  uuid = "BBD064C1-C076-4D28-9B62-A9DA452679B0 - 24ec0e69a5ced6c5"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.NewHabitViewController.collectionView(_: __C.UICollectionView, didSelectItemAt: Foundation.IndexPath) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/NewHabit/NewHabitViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "439"
+                  endingLineNumber = "439"
+                  offsetFromSymbolStart = "1708">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "585ACFE6-8E58-4D08-9407-0B9AB492BC7C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
+            landmarkName = "editTracker(countDay:tracker:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "3ACFB0B0-55BE-42F5-A366-A020D5F7B16C"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "292"
+            endingLineNumber = "292"
+            landmarkName = "editTracker(countDay:tracker:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "3ACFB0B0-55BE-42F5-A366-A020D5F7B16C - 842c663b6787eed0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.EditTrackerViewController.updateTracker(category: Swift.Optional&lt;Swift.String&gt;, countDay: Swift.Optional&lt;Swift.String&gt;, tracker: Swift.Optional&lt;Tracker.Tracker&gt;) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "272">
+               </Location>
+               <Location
+                  uuid = "3ACFB0B0-55BE-42F5-A366-A020D5F7B16C - 842c663b6787eed0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.EditTrackerViewController.updateTracker(category: Swift.Optional&lt;Swift.String&gt;, countDay: Swift.Optional&lt;Swift.String&gt;, tracker: Swift.Optional&lt;Tracker.Tracker&gt;) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "348">
+               </Location>
+               <Location
+                  uuid = "3ACFB0B0-55BE-42F5-A366-A020D5F7B16C - 842c663b6787eed0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.EditTrackerViewController.updateTracker(category: Swift.Optional&lt;Swift.String&gt;, countDay: Swift.Optional&lt;Swift.String&gt;, tracker: Swift.Optional&lt;Tracker.Tracker&gt;) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "460">
+               </Location>
+               <Location
+                  uuid = "3ACFB0B0-55BE-42F5-A366-A020D5F7B16C - 842c663b6787eed0"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Tracker.EditTrackerViewController.updateTracker(category: Swift.Optional&lt;Swift.String&gt;, countDay: Swift.Optional&lt;Swift.String&gt;, tracker: Swift.Optional&lt;Tracker.Tracker&gt;) -&gt; ()"
+                  moduleName = "Tracker"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/aleksejgvozdkov/Desktop/Tracker/Tracker/UI/Tracker/CreatingTracker/NewTracker/EditTracker/EditTrackerViewController.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "290"
+                  endingLineNumber = "290"
+                  offsetFromSymbolStart = "556">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "E4967FE1-81DC-4F85-9378-C7604E413397"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Tracker/UI/Tracker/EditTrackerViewController.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "458"
+            endingLineNumber = "458"
+            landmarkName = "EditTrackerViewController"
+            landmarkType = "21">
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
