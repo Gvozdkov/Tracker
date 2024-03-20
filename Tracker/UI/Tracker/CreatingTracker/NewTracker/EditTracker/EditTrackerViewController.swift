@@ -457,7 +457,6 @@ extension EditTrackerViewController: UICollectionViewDataSource {
 // MARK: - extetion UICollectionViewDelegate
 extension EditTrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-
         if collectionView == emojisCollection {
             let selectedEmogi = emojis[indexPath.item]
             if let cell = collectionView.cellForItem(at: indexPath) {
@@ -468,7 +467,7 @@ extension EditTrackerViewController: UICollectionViewDelegate {
             print(emoji)
         } else if collectionView == colorsCollection {
             let selectedColor = colors[indexPath.item]
-            
+
             if let cell = collectionView.cellForItem(at: indexPath) {
                 cell.layer.cornerRadius = 8
                 cell.layer.borderWidth = 3
@@ -480,27 +479,17 @@ extension EditTrackerViewController: UICollectionViewDelegate {
     }
     
     func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
-        var indexEmoji: IndexPath?
-        
-        if let emoji = matchingIndex {
-            indexEmoji = IndexPath(item: emoji, section: 0)
-        }
-        
         // Отменяем выделение и сбрасываем цвет фона для ячейки
-        if let unwrappedIndexPath = indexEmoji {
-            // Отменяем выделение и сбрасываем цвет фона для ячейки
-            if collectionView == emojisCollection {
-                if let cell = collectionView.cellForItem(at: unwrappedIndexPath) {
-                    cell.backgroundColor = nil
-                }
+        if collectionView == emojisCollection {
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                cell.backgroundColor = nil
             }
-            
-            if collectionView == colorsCollection {
-                if let cell = collectionView.cellForItem(at: indexPath) {
-                    cell.backgroundColor = nil
-                    cell.layer.borderWidth = 0
-                    cell.layer.borderWidth = 0
-                }
+        }
+        if collectionView == colorsCollection {
+            if let cell = collectionView.cellForItem(at: indexPath) {
+                cell.backgroundColor = nil
+                cell.layer.borderWidth = 0
+                cell.layer.borderWidth = 0
             }
         }
     }

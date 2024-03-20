@@ -50,6 +50,7 @@
 		E78F1B082BA3A74300CDC29B /* TrackerCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78F1B072BA3A74300CDC29B /* TrackerCategory.swift */; };
 		E78F1B0A2BA3A75300CDC29B /* Tracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78F1B092BA3A75300CDC29B /* Tracker.swift */; };
 		E78F1B0C2BA3A76200CDC29B /* TrackerRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78F1B0B2BA3A76200CDC29B /* TrackerRecord.swift */; };
+		E7F20D872BA7791C00721C18 /* EditTrackerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7F20D862BA7791C00721C18 /* EditTrackerViewController.swift */; };
 		E7FF89C42BA3830C00DB4CB3 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF89C32BA3830C00DB4CB3 /* AppDelegate.swift */; };
 		E7FF89C62BA3830C00DB4CB3 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7FF89C52BA3830C00DB4CB3 /* SceneDelegate.swift */; };
 		E7FF89CD2BA3830E00DB4CB3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E7FF89CC2BA3830E00DB4CB3 /* Assets.xcassets */; };
@@ -115,6 +116,7 @@
 		E78F1B072BA3A74300CDC29B /* TrackerCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerCategory.swift; sourceTree = "<group>"; };
 		E78F1B092BA3A75300CDC29B /* Tracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tracker.swift; sourceTree = "<group>"; };
 		E78F1B0B2BA3A76200CDC29B /* TrackerRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerRecord.swift; sourceTree = "<group>"; };
+		E7F20D862BA7791C00721C18 /* EditTrackerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditTrackerViewController.swift; sourceTree = "<group>"; };
 		E7FF89C02BA3830C00DB4CB3 /* Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7FF89C32BA3830C00DB4CB3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E7FF89C52BA3830C00DB4CB3 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				E78F1ACA2BA39F6C00CDC29B /* NewTrackerViewController.swift */,
 				E78F1ACC2BA39F8100CDC29B /* NewHabit */,
 				E78F1ACF2BA39FAB00CDC29B /* UnregulatedEvent */,
+				E7F20D852BA778F300721C18 /* EditTracker */,
 				E78F1AD22BA39FE600CDC29B /* CustomCells */,
 				E78F1ADB2BA3A0B800CDC29B /* Category */,
 				E78F1AE62BA3A1B800CDC29B /* Schedule */,
@@ -348,6 +351,14 @@
 				E78F1B052BA3A6BA00CDC29B /* TrackerRecordStore.swift */,
 			);
 			path = Services;
+			sourceTree = "<group>";
+		};
+		E7F20D852BA778F300721C18 /* EditTracker */ = {
+			isa = PBXGroup;
+			children = (
+				E7F20D862BA7791C00721C18 /* EditTrackerViewController.swift */,
+			);
+			path = EditTracker;
 			sourceTree = "<group>";
 		};
 		E7FF89B72BA3830C00DB4CB3 = {
@@ -557,6 +568,7 @@
 				E78F1B042BA3A69800CDC29B /* TrackerStore.swift in Sources */,
 				E78F1B062BA3A6BA00CDC29B /* TrackerRecordStore.swift in Sources */,
 				E78F1AE52BA3A14E00CDC29B /* CategoryModel.swift in Sources */,
+				E7F20D872BA7791C00721C18 /* EditTrackerViewController.swift in Sources */,
 				E78F1ABE2BA3870300CDC29B /* TrackerViewController.swift in Sources */,
 				E78F1AE82BA3A1CD00CDC29B /* ScheduleViewController.swift in Sources */,
 				E78F1AA32BA3845900CDC29B /* ScheduleFormatter.swift in Sources */,
@@ -646,7 +658,7 @@
 				DEVELOPMENT_TEAM = 9WC35YWH6U;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = onePoint.TrackerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = one.TrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -665,7 +677,7 @@
 				DEVELOPMENT_TEAM = 9WC35YWH6U;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = onePoint.TrackerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = one.TrackerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -815,7 +827,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = onePoint.Tracker;
+				PRODUCT_BUNDLE_IDENTIFIER = one.Tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -847,7 +859,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = onePoint.Tracker;
+				PRODUCT_BUNDLE_IDENTIFIER = one.Tracker;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;

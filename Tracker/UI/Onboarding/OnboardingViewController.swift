@@ -2,7 +2,9 @@ import UIKit
 
 final class OnboardingViewController: UIPageViewController {
     private let tabBarViewController = TabBarViewController()
-    
+
+    private let textBigHeadline = ["\(LocalizableKeys.onboardingVCBigHeadline1) \n\(LocalizableKeys.onboardingVCBigHeadline2)", "\(LocalizableKeys.onboardingVCBigHeadline3) \n\(LocalizableKeys.onboardingVCBigHeadline4)"]
+
     private lazy var pagesViewControllers: [UIViewController] = {
         let vc1 = UIViewController()
         let imageView1 = UIImageView(frame: vc1.view.bounds)
@@ -31,17 +33,6 @@ final class OnboardingViewController: UIPageViewController {
         label.numberOfLines = 2
         label.textColor = .black
         label.adjustsFontSizeToFitWidth = true
-        return label
-    }()
-    
-    private lazy var litleHeadline: UILabel = {
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = .medium12
-        label.text = "\(LocalizableKeys.onboardingVCLitleHeadline1) \n\(LocalizableKeys.onboardingVCLitleHeadline2)"
-        label.textAlignment = .center
-        label.numberOfLines = 2
-        label.textColor = .black
         return label
     }()
     
@@ -85,18 +76,14 @@ final class OnboardingViewController: UIPageViewController {
     
     private func constraintsSettingsView() {
         view.addSubview(bigHeadline)
-        view.addSubview(litleHeadline)
         view.addSubview(pageControl)
         view.addSubview(toBeginButton)
         
         NSLayoutConstraint.activate([
-            bigHeadline.bottomAnchor.constraint(equalTo: litleHeadline.topAnchor, constant: -16),
+            bigHeadline.bottomAnchor.constraint(equalTo: toBeginButton.topAnchor, constant: -130),
             bigHeadline.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             bigHeadline.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
             bigHeadline.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            
-            litleHeadline.bottomAnchor.constraint(equalTo: pageControl.topAnchor, constant: -34),
-            litleHeadline.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             
             pageControl.bottomAnchor.constraint(equalTo: toBeginButton.topAnchor, constant: -24),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -140,6 +127,7 @@ extension OnboardingViewController: UIPageViewControllerDelegate {
         if let currentViewController = pageViewController.viewControllers?.first,
            let currentIndex = pagesViewControllers.firstIndex(of: currentViewController) {
             pageControl.currentPage = currentIndex
+            bigHeadline.text = textBigHeadline[currentIndex]
         }
     }
 }

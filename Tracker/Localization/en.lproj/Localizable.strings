@@ -7,11 +7,11 @@
 "schedule" = "Schedule";
 
 // MARK: - OnboardingViewController
-"onboardingVCBigHeadline1" = "Sed ut perspiciatis";
-"onboardingVCBigHeadline2" = "unde omnis iste natus";
-"onboardingVCLitleHeadline1" = "Sed ut perspiciatis unde omnis iste";
-"onboardingVCLitleHeadline2" = "natus error sit voluptatem";
-"onboardingVCToBeginButton" = "Start";
+"onboardingVCBigHeadline1" = "Track only";
+"onboardingVCBigHeadline2" = "what you want";
+"onboardingVCBigHeadline3" = "Even if it is's";
+"onboardingVCBigHeadline4" = "not liters of water and yoga";
+"onboardingVCToBeginButton" = "These are the technologies!";
 
 // MARK: - TrackerViewController
 "trackerVCSearchBar" = "Search";

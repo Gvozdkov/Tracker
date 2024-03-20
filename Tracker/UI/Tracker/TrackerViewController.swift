@@ -1,7 +1,6 @@
 import UIKit
 
 class TrackerViewController: UIViewController {
-    
     private let trackerStore = TrackerStore()
     private let trackerCategoryStore = TrackerCategoryStore()
     private let trackerRecordStore = TrackerRecordStore()
@@ -9,13 +8,15 @@ class TrackerViewController: UIViewController {
     private let trackerCastomCell = TrackerCastomCell()
     private let filtersViewController = FiltersViewController()
     private let statisticViewController = StatisticViewController()
-    private let newHabitViewController = NewHabitViewController()
+    private let editTrackerViewController = EditTrackerViewController()
  
     private var data = [(header: String, [Tracker])]()
     private var filteredDays = [(header: String, [Tracker])]()
     private var trackerRecords = [TrackerRecord]()
     private var currentDate = Date()
     private var currentFilter: String = "Все трекеры"
+    private var updateCategory = "ghh"
+    private var updateCountDay = "9"
     private var uppdateTracker: Tracker?
     
     private lazy var buttonNewTracker: UIButton = {
@@ -280,33 +281,7 @@ class TrackerViewController: UIViewController {
           filteredDaysIsEmpty()
           trackerCollection.reloadData()
       }
-//    private func filteredSelectedDay() {
-//        let calendar = Calendar.current
-//        let selectedWeekday = calendar.component(.weekday, from: currentDate)
-//        let localizedWeekdayString = localizedWeekday(from: selectedWeekday)
-//
-//        var updatedFilteredDays = [(String, [Tracker])]()
-//
-//        for (category, trackers) in data {
-//            let filteredTrackers = trackers.filter { tracker in
-//                if let schedule = tracker.schedule {
-//                    if schedule.count == 2 && schedule[0] == .monday && schedule[1] == .monday {
-//                        return true  // Отображаем каждый день, так как расписание содержит два понедельника
-//                    } else {
-//                        return schedule.contains(where: { $0.rawValue == localizedWeekdayString })
-//                    }
-//                }
-//                return false
-//            }
-//
-//            updatedFilteredDays.append((category, filteredTrackers))  // Добавляем все отфильтрованные трекеры, даже если список пустой
-//        }
-//
-//        filteredDays = updatedFilteredDays
-//        filteredDaysIsEmpty()
-//        trackerCollection.reloadData()
-//    }
-//
+
     private func filterTrackersForSelectedDay() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         datePicker.date = Date()  // Устанавливаем текущую дату в datePicker
@@ -388,50 +363,6 @@ class TrackerViewController: UIViewController {
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
     }
-
-    
-//    private func showUncompletedTrackersForSelectedDay() {
-//        currentDate = datePicker.date.removeTimeStamp() ?? Date()
-//        let selectedDate = currentDate  // Получаем выбранную дату из datePicker
-//
-//        var updatedFilteredDays = [(header: String, [Tracker])]()
-//
-//        for (category, trackers) in data {
-//            let uncompletedTrackers = trackers.filter { tracker in
-//                // Проверяем, нет ли завершенной записи для данного трекера и выбранной даты
-//                return !trackerRecords.contains(where: { $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: selectedDate) })
-//            }
-//
-//            if !uncompletedTrackers.isEmpty {
-//                updatedFilteredDays.append((category, uncompletedTrackers))
-//            }
-//        }
-//
-//        filteredDays = updatedFilteredDays
-//        filteredDaysIsEmpty()
-//        trackerCollection.reloadData()
-//    }
-
-//    private func filterTrackerEvent(_ tracker: Tracker, _ counterDays: Int) -> String {
-//        let tasksTracker = String.localizedStringWithFormat(
-//                NSLocalizedString("tasksTracker", comment: "Number of remaining tasks"), counterDays)
-//        let tasksHabit = String.localizedStringWithFormat(
-//                NSLocalizedString("tasksHabit", comment: "Number of remaining tasks"), counterDays)
-//
-//        var result = ""
-//        if let schedule = tracker.schedule {
-//            // Проверяем, является ли массив расписания [Tracker.Weekday.monday, Tracker.Weekday.monday]
-//            if schedule.count == 2 && schedule[0] == .monday && schedule[1] == .monday {
-//                result = tasksHabit
-//                print("tasksHabit")
-//            } else {
-//                result = tasksTracker
-//                print("tasksTracker")
-//            }
-//        }
-//        return result
-//    }
-//
     
     private func filterTrackerEvent(_ tracker: Tracker, _ counterDays: Int) -> String {
         let tasksTracker = String.localizedStringWithFormat(
@@ -441,7 +372,6 @@ class TrackerViewController: UIViewController {
         
         var result = ""
         if let schedule = tracker.schedule {
-            // Проверяем, является ли массив расписания [Tracker.Weekday.monday, ..., Tracker.Weekday.sunday]
             if Set(schedule) == Set(Weekday.allCases) {
                 result = tasksHabit
                 print("tasksHabit")
@@ -478,8 +408,6 @@ class TrackerViewController: UIViewController {
     }
    
     @objc private func didChangedDatePicker() {
-//        currentDate = datePicker.date.removeTimeStamp() ?? Date()
-//        filteredSelectedDay()
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         
         switch currentFilter {
@@ -542,52 +470,6 @@ extension TrackerViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
     }
     
-    //    func collectionView(_ collectionView: UICollectionView, contextMenuConfigurationForItemAt indexPath: IndexPath, point: CGPoint) -> UIContextMenuConfiguration? {
-    ////        let tracker = data[indexPath.row]// получите объект Tracker для данного indexPath
-    //
-    //        // Создание контекстного меню
-    //        let configuration = UIContextMenuConfiguration(identifier: nil, previewProvider: nil) { _ in
-    //            // Создание пунктов меню
-    //            var menuActions: [UIMenuElement] = []
-    //
-    //            // Пункт "Открепить" или "Закрепить"
-    //            let pinUnpinAction = UIAction(title: "Закрепить", image: nil) { _ in
-    //                AnalyticsService.clickRecordTrackReport()
-    //            }
-    //            menuActions.append(pinUnpinAction)
-    //
-    //            // Пункт "Редактировать"
-    //            let editAction = UIAction(title: "Редактировать", image: nil) { _ in
-    //                AnalyticsService.editTrackReport()
-    //                guard let tracker = self.uppdateTracker else { return }
-    //                self.newHabitViewController.editTracker(title: "header", name: tracker.name, emoji: tracker.emoji, color: tracker.color, weekday: tracker.schedule)
-    //                self.present(self.newHabitViewController, animated: true)
-    //            }
-    //            menuActions.append(editAction)
-    //
-    //            // Пункт "Удалить"
-    //            let deleteAction = UIAction(title: "Удалить", image: UIImage(systemName: "trash"), attributes: .destructive) { _ in
-    //                AnalyticsService.deleteTrackReport()
-    //                // Здесь запускается флоу удаления привычки
-    //                let trackerToDelete = self.data[indexPath.section].1[indexPath.row]
-    //                // Perform deletion logic here using the trackerToDelete object
-    //                do {
-    //                    try self.trackerStore.deleteTracker(trackerToDelete)
-    //                    // Optionally, update the UI or perform any necessary actions after deletion
-    //                } catch {
-    //                    // Handle error during deletion, if necessary
-    //                }
-    //            }
-    //            menuActions.append(deleteAction)
-    //
-    //            // Создание и возвращение меню
-    //            return UIMenu(title: "", children: menuActions)
-    //        }
-    //
-    //        return configuration
-    //    }
-    
-    
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
     }
@@ -615,6 +497,25 @@ extension TrackerViewController: UISearchBarDelegate {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell else { return nil }
         
+        if indexPath.section < filteredDays.count {
+            let sectionData = filteredDays[indexPath.section]
+            let rowData = sectionData.1
+            
+            if indexPath.row < rowData.count {
+                let header = sectionData.header
+                let trackerItem = rowData[indexPath.row]
+                
+                self.updateCategory = header
+                self.uppdateTracker = trackerItem
+                if let tracker = uppdateTracker {
+                    let countDays = getTotalDateCount(forTrackerId: tracker.id)
+                    updateCountDay = "\(countDays)"
+                }
+                
+            }
+        }
+            
+            
         var pinTracker: Bool // Assume you have a variable to track if the tracker is pinned or not
         
         // Your logic for checking if the tracker cell is pinned
@@ -633,8 +534,12 @@ extension TrackerViewController: UISearchBarDelegate {
                     }
                 },
                 UIAction(title: "Редактировать") { [weak self] _ in
-                    // Your action for editing tracker
-                    // ...
+                    
+                    if let vc = self?.editTrackerViewController {
+                        self?.present(vc, animated: true)
+                    }
+                    
+                    self?.editTrackerViewController.updateTracker(category: self?.updateCategory, countDays: self?.updateCountDay, tracker: self?.uppdateTracker)
                 },
                 UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive) { [weak self] _ in
                     // Your action for deleting tracker
@@ -680,7 +585,7 @@ extension TrackerViewController: UICollectionViewDataSource {
     
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let header = filteredDays[indexPath.section].0
+        updateCategory = filteredDays[indexPath.section].0
         let tracker = filteredDays[indexPath.section].1[indexPath.item]
         uppdateTracker = tracker
         let counterDays = getTotalDateCount(forTrackerId: tracker.id)

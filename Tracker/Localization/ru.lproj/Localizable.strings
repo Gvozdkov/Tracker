@@ -7,11 +7,11 @@
 "schedule" = "Расписание";
 
 // MARK: - OnboardingViewController
-"onboardingVCBigHeadline1" = "То, что является перспективой";
-"onboardingVCBigHeadline2" = "для всего сущего, есть природа";
-"onboardingVCLitleHeadline1" = "То, что ты видишь во всем - это ошибка,";
-"onboardingVCLitleHeadline2" = "которая приводит к сладострастию";
-"onboardingVCToBeginButton" = "Начать";
+"onboardingVCBigHeadline1" = "Отслеживайте только";
+"onboardingVCBigHeadline2" = "то, что хотите";
+"onboardingVCBigHeadline3" = "Даже если это";
+"onboardingVCBigHeadline4" = "не литры воды и йога";
+"onboardingVCToBeginButton" = "Вот это технологии!";
 
 // MARK: - TrackerViewController
 "trackerVCSearchBar" = "Поиск";
