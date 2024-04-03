@@ -273,7 +273,9 @@ final class UnregulatedEventViewController: UIViewController {
                              name: name,
                              emoji: emoji,
                              color: color,
-                             weekday: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday])
+                             weekday: [.monday, .tuesday, .wednesday, .thursday, .friday, .saturday, .sunday],
+                             indexEmoji: IndexPath(),
+                             indexColor: IndexPath())
     }
     
     @objc private func tapCancelButton() {

@@ -11,7 +11,8 @@ final class ScheduleViewController: UIViewController {
     
     private var selectedWeekdays: Set<Weekday> = []
     private let weekdaysLocalizable = [LocalizableKeys.monday, LocalizableKeys.tuesday, LocalizableKeys.wednesday, LocalizableKeys.thursday, LocalizableKeys.friday, LocalizableKeys.saturday, LocalizableKeys.sunday]
-
+    private var weekdaysIndex = [Int]()
+    
     private lazy var headingLabel: UILabel = {
         let headingLabel = UILabel()
         headingLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -89,6 +90,15 @@ final class ScheduleViewController: UIViewController {
         ])
     }
     
+    func selectedDay(weekday: [Weekday]) {
+        selectedWeekdays = Set(weekday)
+        weekdaysIndex = weekday.compactMap { weekday in
+//            Weekday.allCases.firstIndex(of: weekday)
+            weekday.index
+        }
+        print("weekdaysIndex \(weekdaysIndex)")
+    }
+    
     @objc private func confirmationButtonAction() {
         let weekdays = Array(selectedWeekdays).sorted()
         delegate?.didConfirm(weekdays)
@@ -107,7 +117,13 @@ extension ScheduleViewController: UITableViewDataSource {
             let weekday = Weekday.allCases[indexPath.row]
             cell.configureCell(weekday, weekdaysLocalizable[indexPath.row])
             cell.backgroundColor = UIColor.clear
-            cell.selectionStyle = .none
+            if weekdaysIndex.contains(indexPath.row) {
+                cell.selectSwitch(inOn: true)
+                cell.selectionStyle = .blue
+            } else {
+                cell.selectSwitch(inOn: false)
+                cell.selectionStyle = .none
+            }
             cell.delegate = self
             return cell
         } else {

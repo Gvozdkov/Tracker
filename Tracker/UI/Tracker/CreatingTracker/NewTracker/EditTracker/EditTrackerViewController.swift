@@ -1,11 +1,15 @@
 import UIKit
 
+protocol EditTracker: AnyObject {
+    func editTracker(category: String, tracker: Tracker)
+}
+
 final class EditTrackerViewController: UIViewController {
-    weak var delegate: NewHabitDelegate?
+    weak var delegateEdit: EditTracker?
     
     private let categoryViewController = CategoryViewController(viewModel: CategoryViewModel(model: CategoryModel()))
     private let scheduleViewController = ScheduleViewController()
-//    private let trackerViewController = TrackerViewController()
+    private let categoryModel = CategoryModel()
     private var name: String = "" {
         didSet {
             fillingInTheTracker()
@@ -41,7 +45,15 @@ final class EditTrackerViewController: UIViewController {
     
     private var tracker: Tracker?
     private var countDays = ""
-    private var matchingIndex: Int?
+//    private var colorAndEmojiIndex: ColorAndEmojiIndex?
+    
+    private var indexEmoji = IndexPath()
+    private var indexColor = IndexPath()
+    
+    private var emojiIndex: Int?
+    private var selectEmoji = ""
+    private var colorIndex: Int?
+    private var selectColor: UIColor?
     
     private let emojis = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -205,7 +217,13 @@ final class EditTrackerViewController: UIViewController {
         super.viewWillAppear(animated)
 
         editTracker(countDay: countDays, tracker: tracker)
-
+        findMatchingEmojiIndex()
+        findMatchingColorIndex()
+//        print("colorAndEmojiIndex \(colorAndEmojiIndex)")
+//        if let colorIndexPath = colorAndEmojiIndex?.color {
+//            let colorIndex = colorIndexPath.item
+//            self.colorIndex = colorIndex
+//        }
     }
     
     override func viewDidLoad() {
@@ -278,27 +296,67 @@ final class EditTrackerViewController: UIViewController {
     }
     
     private func fillingInTheTracker() {
-        if name != "" && emoji != "" && weekday != nil && color != .clear {
+        guard let tracker = self.tracker else { return }
+        let isSame = tracker.color.isEqualToColor(otherColor: color) && tracker.schedule == weekday && tracker.emoji == emoji && tracker.name == name
+        
+        if !isSame && name != "" && emoji != "" && weekday != nil && color != .clear {
             createButton.backgroundColor = ColorsForTheTheme.shared.buttonAction
             createButton.setTitleColor(ColorsForTheTheme.shared.ButtonText, for: .normal)
             createButton.isEnabled = true
         } else {
             createButton.isEnabled = false
+            createButton.backgroundColor = .gray
         }
     }
 
     private func editTracker(countDay: String?, tracker: Tracker?) {
         nameTrackerTextField.text = tracker?.name
-//        subCategory = category
+        name = tracker?.name ?? ""
         daysLabel.text = countDay
         weekday = tracker?.schedule
-        if let tracker = tracker {
-            matchingIndex = emojis.firstIndex(of: tracker.emoji)
-        }
-        print("tracker.emoji \(tracker?.emoji)")
-        print("индекс эмоджи \(matchingIndex)")
+        selectEmoji = tracker?.emoji ?? ""
+        selectColor = tracker?.color ?? UIColor.clear
+        
+        findMatchingEmojiIndex()
+        findMatchingColorIndex()
+        
         buttonTableView.reloadData()
         emojisCollection.reloadData()
+        colorsCollection.reloadData()
+        
+        
+        //        if let tracker = tracker {
+        //            selectEmoji = tracker.emoji
+//            selectColor = tracker.color
+//            self.colorAndEmojiIndex = colorAndEmojiIndex
+//            print("editTracker colorAndEmojiIndex \(colorAndEmojiIndex) ")
+//            findMatchingEmojiIndex()
+//            
+//            buttonTableView.reloadData()
+//            emojisCollection.reloadData()
+//            colorsCollection.reloadData()
+//        }
+    }
+    
+    private func findMatchingEmojiIndex() {
+        if let index = emojis.firstIndex(of: selectEmoji) {
+            emojiIndex = index
+            emoji = emojis[index]
+        } else {
+            emojiIndex = nil
+        }
+    }
+
+    
+    private func findMatchingColorIndex() {
+        if let selectColor = selectColor {
+            if let index = colors.firstIndex(where: { $0.isEqualToColor(otherColor: selectColor) }) {
+                colorIndex = index
+                color = colors[index]
+            } else {
+                print("Цвет не найден в массиве")
+            }
+        }
     }
 
     func updateTracker(category: String?, countDays: String?, tracker: Tracker?) {
@@ -336,7 +394,10 @@ final class EditTrackerViewController: UIViewController {
     }
     
     @objc private func tapCreateButton() {
-        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: weekday)
+        if let id = tracker?.id as? UUID {
+            let trackerUpdate = Tracker(id: id, name: name, emoji: emoji, color: color, schedule: weekday, isPin: false)
+            delegateEdit?.editTracker(category: subCategory, tracker: trackerUpdate)
+        }
     }
 }
 
@@ -387,21 +448,21 @@ extension EditTrackerViewController: UITableViewDataSource {
     }
 }
 
-
 // MARK: - extension UITableViewDelegate
 extension EditTrackerViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
         if indexPath.row == 0 {
             present(categoryViewController, animated: true)
+            categoryViewController.selectedCategoty = subCategory
+            categoryModel.selectCategory = subCategory
             
         } else {
+            scheduleViewController.selectedDay(weekday: weekday ?? [])
             present(scheduleViewController, animated: true)
         }
     }
 }
-
 
 // MARK: - extetion UIImage
 private extension UIImage {
@@ -437,19 +498,38 @@ extension EditTrackerViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == emojisCollection {
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCustomCell", for: indexPath) as? EmojiCustomCell {
-                cell.cellSettings(emojiLabel: emojis[indexPath.item])
-                return cell
-            }
-        } else if collectionView == colorsCollection {
-            if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCustomCell", for: indexPath) as? ColorCustomCell {
-                let color = colors[indexPath.item] // Получаем цвет из массива
-                let image = UIImage(color: color)
-                cell.cellSettings(colorsImage: image)
-                return cell
-            }
-        }
-        return UICollectionViewCell()
+               if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "EmojiCustomCell", for: indexPath) as? EmojiCustomCell {
+                   cell.backgroundColor = .clear
+                   
+
+                   if indexPath.row == emojiIndex { // Проверка на совпадение с matchingIndex
+                       cell.backgroundColor = .lightGray
+                       cell.layer.cornerRadius = 16
+                   }
+               
+                   cell.cellSettings(emojiLabel: emojis[indexPath.item])
+                   return cell
+               }
+           } else if collectionView == colorsCollection {
+               if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ColorCustomCell", for: indexPath) as? ColorCustomCell {
+                   let color = colors[indexPath.item] // Получаем цвет из массива
+                   let image = UIImage(color: color)
+   
+                   cell.layer.cornerRadius = 0
+                   cell.layer.borderWidth = 0
+                   cell.layer.borderColor = nil
+                   
+                   if indexPath.row == colorIndex { // Проверка на совпадение с matchingIndex
+                       let selectedColor = colors[indexPath.item]
+                       cell.layer.cornerRadius = 8
+                       cell.layer.borderWidth = 3
+                       cell.layer.borderColor = selectedColor.withAlphaComponent(0.3).cgColor
+                   }
+                   cell.cellSettings(colorsImage: image)
+                   return cell
+               }
+           }
+           return UICollectionViewCell()
     }
 }
 
@@ -459,22 +539,48 @@ extension EditTrackerViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == emojisCollection {
             let selectedEmogi = emojis[indexPath.item]
+            
+            // Сброс предыдущего выбранного элемента
+            if let previousIndex = emojiIndex {
+                if let previousCell = collectionView.cellForItem(at: IndexPath(item: previousIndex, section: 0)) {
+                    previousCell.backgroundColor = nil
+                    previousCell.layer.cornerRadius = 0
+                }
+            }
+
             if let cell = collectionView.cellForItem(at: indexPath) {
                 cell.backgroundColor = .lightGray
                 cell.layer.cornerRadius = 16
             }
             emoji = selectedEmogi
             print(emoji)
-        } else if collectionView == colorsCollection {
+            indexEmoji = indexPath
+            print("indexEmoji - \(indexEmoji)")
+        }  else if collectionView == colorsCollection {
             let selectedColor = colors[indexPath.item]
+            
+            // Сброс предыдущего выбранного элемента
+            if let previousIndex = colorIndex {
+                if let previousCell = collectionView.cellForItem(at: IndexPath(item: previousIndex, section: 0)) {
+                    previousCell.layer.cornerRadius = 0
+                    previousCell.layer.borderWidth = 0
+                    previousCell.layer.borderColor = nil
+                }
+            }
 
             if let cell = collectionView.cellForItem(at: indexPath) {
+                colorIndex = nil
                 cell.layer.cornerRadius = 8
                 cell.layer.borderWidth = 3
                 cell.layer.borderColor = selectedColor.withAlphaComponent(0.3).cgColor
             }
+            
             color = selectedColor
+            colorIndex = indexPath.item
             print(color)
+            
+            indexColor = indexPath
+            print("indexColor - \(indexColor)")
         }
     }
     
@@ -525,5 +631,29 @@ extension EditTrackerViewController: ScheduleViewControllerDelegate {
         weekday = schedule
         buttonTableView.reloadData()
         dismiss(animated: true)
+    }
+}
+
+
+private extension UIColor {
+    func isEqualToColor(otherColor : UIColor) -> Bool {
+      var red:CGFloat = 0
+      var green:CGFloat  = 0
+      var blue:CGFloat = 0
+      var alpha:CGFloat  = 0
+      self.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
+
+      var red2:CGFloat = 0
+      var green2:CGFloat  = 0
+      var blue2:CGFloat = 0
+      var alpha2:CGFloat  = 0
+      otherColor.getRed(&red2, green: &green2, blue: &blue2, alpha: &alpha2)
+
+      let distance = sqrt(pow((red - red2), 2) + pow((green - green2), 2) + pow((blue - blue2), 2) )
+      if distance <= 0.003 {
+        return true
+      } else {
+        return false
+      }
     }
 }

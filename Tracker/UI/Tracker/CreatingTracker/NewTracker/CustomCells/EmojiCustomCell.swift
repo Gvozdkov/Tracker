@@ -30,6 +30,6 @@ final class EmojiCustomCell: UICollectionViewCell {
     }
     
     func cellSettings(emojiLabel: String?) {
-        self.emojiLabel .text = emojiLabel
+        self.emojiLabel.text = emojiLabel
     }
 }

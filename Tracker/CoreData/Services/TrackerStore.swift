@@ -43,7 +43,7 @@ class TrackerStore: NSObject {
     // MARK: - Create
     func addNewTracker(_ category: String, _ tracker: Tracker) throws {
         if let categoryData = trackerCategoryStore.fetchTrackerCategory(name: category) {
-            updateTracker(trackerCategoryCoreData: categoryData, tracker: tracker)
+            saveTrackerCD(trackerCategoryCoreData: categoryData, tracker: tracker)
             try context.save()
         }
     }
@@ -73,7 +73,7 @@ class TrackerStore: NSObject {
     }
     
     // MARK: - Update
-    func updateTracker(trackerCategoryCoreData: TrackerCategoryCoreData, tracker: Tracker) {
+    func saveTrackerCD(trackerCategoryCoreData: TrackerCategoryCoreData, tracker: Tracker) {
         let trackerCoreData = TrackerCoreData(context: context)
         trackerCoreData.id = tracker.id
         trackerCoreData.name = tracker.name
@@ -81,6 +81,23 @@ class TrackerStore: NSObject {
         trackerCoreData.color = СolorMarshalling.hexString(from: tracker.color)
         trackerCoreData.shedule = ScheduleConverter.convertToString(array: tracker.schedule)
         trackerCoreData.category = trackerCategoryCoreData
+        trackerCoreData.isPin = tracker.isPin
+    }
+    
+    
+    func updateTracker(newCategory: String, tracker: Tracker, isPin: Bool? = nil) throws {
+        let trackerCorData = fetchTrackersId(id: tracker.id)
+        
+        trackerCorData?.color = СolorMarshalling.hexString(from: tracker.color)
+        trackerCorData?.emoji = tracker.emoji
+        trackerCorData?.name = tracker.name
+        trackerCorData?.shedule = ScheduleConverter.convertToString(array: tracker.schedule)
+        if let resultPin = isPin {
+            trackerCorData?.isPin = resultPin
+        } else {
+            trackerCorData?.isPin = tracker.isPin
+        }
+            try context.save()
     }
     
     func trackerMap(trackerCoreData: TrackerCoreData) -> Tracker {
@@ -88,7 +105,8 @@ class TrackerStore: NSObject {
                        name:  trackerCoreData.name ?? "" ,
                        emoji: trackerCoreData.emoji ?? "",
                        color: СolorMarshalling.hecColor(from: trackerCoreData.color ?? ""),
-                       schedule: ScheduleConverter.convertToArray(string: trackerCoreData.shedule ?? ""))
+                       schedule: ScheduleConverter.convertToArray(string: trackerCoreData.shedule ?? ""), 
+                       isPin: trackerCoreData.isPin)
     }
       
     

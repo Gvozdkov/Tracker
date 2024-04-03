@@ -1,11 +1,12 @@
 import UIKit
 
 protocol NewHabitDelegate: AnyObject {
-    func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?)
+    func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?, indexEmoji: IndexPath, indexColor: IndexPath)
 }
 
 final class NewHabitViewController: UIViewController {
     weak var delegate: NewHabitDelegate?
+
     
     private let categoryViewController = CategoryViewController(viewModel: CategoryViewModel(model: CategoryModel()))
     private let scheduleViewController = ScheduleViewController()
@@ -42,6 +43,8 @@ final class NewHabitViewController: UIViewController {
     }
     
     private var subCategory = ""
+    private var indexEmoji = IndexPath()
+    private var indexColor = IndexPath()
     
     private let emojis = [
         "🙂", "😻", "🌺", "🐶", "❤️", "😱",
@@ -304,7 +307,7 @@ final class NewHabitViewController: UIViewController {
     }
     
     @objc private func tapCreateButton() {
-        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: weekday)
+        delegate?.newTracker(title: subCategory, name: name, emoji: emoji, color: color, weekday: weekday, indexEmoji: indexEmoji, indexColor: indexColor)
     }
 }
 
@@ -433,6 +436,8 @@ extension NewHabitViewController: UICollectionViewDelegate {
             }
             emoji = selectedEmogi
             print(emoji)
+            indexEmoji = indexPath
+            print("indexEmoji - \(indexEmoji)")
         } else if collectionView == colorsCollection {
             let selectedColor = colors[indexPath.item]
 
@@ -443,6 +448,8 @@ extension NewHabitViewController: UICollectionViewDelegate {
             }
             color = selectedColor
             print(color)
+            indexColor = indexPath
+             print("indexColor - \(indexColor)")
         }
     }
     

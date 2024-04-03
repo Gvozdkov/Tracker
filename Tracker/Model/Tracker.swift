@@ -6,6 +6,32 @@ struct Tracker: Hashable {
     let emoji: String
     let color: UIColor
     let schedule: [Weekday]?
+    let isPin: Bool
+    
+    init(
+            id: UUID,
+             name:  String,
+             emoji: String,
+             color: UIColor,
+             schedule: [Weekday]?,
+             isPin: Bool
+        ){
+            self.id = id
+            self.name = name
+            self.emoji = emoji
+            self.color = color
+            self.schedule = schedule
+            self.isPin = isPin
+        }
+
+        init(tracker: Tracker, isPinned: Bool){
+            id = tracker.id
+            name = tracker.name
+            emoji = tracker.emoji
+            color = tracker.color
+            schedule = tracker.schedule
+            self.isPin = isPinned
+        }
 }
 
 enum Weekday: String, CaseIterable, Comparable, Encodable, Decodable {
@@ -26,6 +52,18 @@ enum Weekday: String, CaseIterable, Comparable, Encodable, Decodable {
         case .friday: return LocalizableKeys.fri
         case .saturday: return LocalizableKeys.sat
         case .sunday: return LocalizableKeys.sun
+        }
+    }
+    
+    var index: Int {
+        switch self {
+        case .monday: return 0
+        case .tuesday: return 1
+        case .wednesday: return 2
+        case .thursday: return 3
+        case .friday: return 4
+        case .saturday: return 5
+        case .sunday: return 6
         }
     }
     

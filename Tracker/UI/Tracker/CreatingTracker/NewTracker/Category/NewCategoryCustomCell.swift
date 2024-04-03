@@ -31,6 +31,8 @@ final class NewCategoryCustomCell: UITableViewCell {
     private func settingsViewController() {
         contentView.addSubview(categorysLabel)
         contentView.addSubview(rightImageView)
+        contentView.backgroundColor = ColorsForTheTheme.shared.table
+        self.clipsToBounds = true
         
         NSLayoutConstraint.activate([
             contentView.heightAnchor.constraint(equalToConstant: 75),

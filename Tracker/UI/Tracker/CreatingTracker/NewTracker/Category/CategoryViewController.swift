@@ -9,6 +9,7 @@ final class CategoryViewController: UIViewController {
     private let newCategoryViewController = NewCategoryViewController()
     private let viewModel: CategoryViewModel
     private var selectedRow: Int?
+    var selectedCategoty = ""
     
     private lazy var headingLabel: UILabel = {
         let headingLabel = UILabel()
@@ -18,12 +19,11 @@ final class CategoryViewController: UIViewController {
         return headingLabel
     }()
     
-    private var userCategoryTableView: UITableView = {
+    var userCategoryTableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.separatorStyle = .none
-        tableView.isScrollEnabled = true
-        tableView.backgroundColor = ColorsForTheTheme.shared.table
+        tableView.isScrollEnabled = false
         tableView.layer.cornerRadius = 16
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = ColorsForTheTheme.shared.separator
@@ -79,6 +79,8 @@ final class CategoryViewController: UIViewController {
         super.viewWillAppear(animated)
         viewModel.model.fetchAllTrackerCategory()
         userCategoryIsEmpty()
+        
+        sizeTable()
     }
     
     override func viewDidLoad() {
@@ -86,6 +88,8 @@ final class CategoryViewController: UIViewController {
         newCategoryViewController.delegate = self
         settingsViewController()
     }
+    
+    
     
     private func settingsViewController() {
         userCategoryTableView.dataSource = self
@@ -101,13 +105,14 @@ final class CategoryViewController: UIViewController {
         
         
         NSLayoutConstraint.activate([
-            headingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 28),
+            headingLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 26),
             headingLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            headingLabel.heightAnchor.constraint(equalToConstant: 22),
             
             userCategoryTableView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 24),
             userCategoryTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             userCategoryTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            userCategoryTableView.bottomAnchor.constraint(equalTo: habitButton.topAnchor, constant: -114.0),
+            userCategoryTableView.bottomAnchor.constraint(equalTo: habitButton.topAnchor, constant: -16),
             
             starImageView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
             starImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -134,6 +139,28 @@ final class CategoryViewController: UIViewController {
         }
     }
     
+    private func sizeTable() {
+        let maxTableHeight: CGFloat = 300
+        let rowHeight: CGFloat = 75.0
+        let defaultTableHeight: CGFloat = max(min(CGFloat(viewModel.model.userCategory.count) * rowHeight, maxTableHeight), rowHeight)
+        
+        
+        userCategoryTableView.isScrollEnabled = true
+        userCategoryTableView.heightAnchor.constraint(equalToConstant: defaultTableHeight).isActive = true
+        
+        userCategoryTableView.setNeedsLayout()
+        self.view.layoutIfNeeded()
+        
+        UIView.performWithoutAnimation {
+            userCategoryTableView.frame.size.height = defaultTableHeight
+            userCategoryTableView.reloadData()
+            userCategoryTableView.setNeedsLayout()
+            self.view.layoutIfNeeded()
+        }
+        settingsViewController()
+        userCategoryTableView.reloadData()
+    }
+    
     @IBAction private func addCategoryButtonAction() {
         self.present(newCategoryViewController, animated: false)
     }
@@ -157,6 +184,7 @@ extension CategoryViewController: UITableViewDataSource {
             
             cell.backgroundColor = .clear
             cell.selectionStyle = .none
+            
             return cell
         } else {
             assertionFailure("Error - NewCategoryCustomCell")
@@ -169,7 +197,7 @@ extension CategoryViewController: UITableViewDataSource {
 extension CategoryViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         var rowsToUpdate = [indexPath]
-        
+        sizeTable()
         if let selectedRow = selectedRow, selectedRow < viewModel.model.userCategory.count {
             rowsToUpdate.append(IndexPath(row: selectedRow, section: 0))
         }
@@ -177,17 +205,45 @@ extension CategoryViewController: UITableViewDelegate {
         tableView.reloadRows(at: rowsToUpdate, with: .none)
         viewModel.model.selectCategory = viewModel.model.userCategory[indexPath.row]
         self.delegate?.selectedCategory(category: viewModel.model.selectCategory)
+
     }
 }
 
 // MARK: - NewSaveCategoryDelegate
+//extension CategoryViewController: NewSaveCategoryDelegate {
+//    func saveCategory(category: String?) {
+//        if let category = category {
+//            dismiss(animated: true)
+//            
+//            // Обновляем данные модели и добавляем новую категорию
+//            viewModel.model.addNewTrackerCategory(category)
+//            
+//            // Определяем индекс добавленной категории
+//            let newIndex = viewModel.model.userCategory.count - 1
+//            let newIndexPath = IndexPath(row: newIndex, section: 0)
+//            
+//            // Выполняем вставку новой строки в таблицу
+//            userCategoryTableView.performBatchUpdates({
+//                userCategoryTableView.insertRows(at: [newIndexPath], with: .automatic)
+//            }) { [weak self] _ in
+//                guard let self = self else { return }
+//                self.sizeTable() // Вызов метода после успешного обновления таблицы
+//                self.userCategoryTableView.reloadData()
+//                self.userCategoryIsEmpty()
+//            }
+//        }
+//    }
+//}
 extension CategoryViewController: NewSaveCategoryDelegate {
     func saveCategory(category: String?) {
         if let category = category {
-            dismiss(animated: true)
             viewModel.model.addNewTrackerCategory(category)
-            userCategoryTableView.reloadData()
+            DispatchQueue.main.async{
+                self.sizeTable()
+            }
+            
             userCategoryIsEmpty()
+            dismiss(animated: true)
         }
     }
 }

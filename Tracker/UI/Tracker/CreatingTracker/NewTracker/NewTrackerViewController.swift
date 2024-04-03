@@ -1,9 +1,11 @@
 import UIKit
 
 final class NewTrackerViewController: UIViewController {
-    let newHabitViewController = NewHabitViewController()
-    
     weak var delegate: NewHabitDelegate?
+    weak var delegateEdit: EditTracker?
+    
+    let newHabitViewController = NewHabitViewController()
+    let editTrackerViewController = EditTrackerViewController()
     
     private lazy var headingLabel: UILabel = {
         let headingLabel = UILabel()
@@ -30,7 +32,7 @@ final class NewTrackerViewController: UIViewController {
         button.backgroundColor = ColorsForTheTheme.shared.buttonAction
         button.setTitleColor(ColorsForTheTheme.shared.ButtonText, for: .normal)
         button.layer.cornerRadius = 16
-        button.setTitle(LocalizableKeys.newTrackerVCUnregulatedEventButton, for: .normal)
+        button.setTitle(LocalizableKeys.newTrackerVCIrregularEvents, for: .normal)
         button.titleLabel?.font = .medium16
         button.addTarget(self, action: #selector(unregulatedEvenButtonAction), for: .touchUpInside)
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -49,6 +51,7 @@ final class NewTrackerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         newHabitViewController.delegate = self.delegate
+        editTrackerViewController.delegateEdit = self.delegateEdit
         settingsViewController()
     }
     

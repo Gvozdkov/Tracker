@@ -9,15 +9,20 @@ class TrackerViewController: UIViewController {
     private let filtersViewController = FiltersViewController()
     private let statisticViewController = StatisticViewController()
     private let editTrackerViewController = EditTrackerViewController()
- 
+    
+    private var allData = [(header: String, [Tracker])]()
     private var data = [(header: String, [Tracker])]()
+    private var pinData = (header: "Закрепленые", [Tracker]())
     private var filteredDays = [(header: String, [Tracker])]()
     private var trackerRecords = [TrackerRecord]()
+    
     private var currentDate = Date()
-    private var currentFilter: String = "Все трекеры"
+    private var currentFilter = LocalizableKeys.allTrackers
     private var updateCategory = "ghh"
     private var updateCountDay = "9"
     private var uppdateTracker: Tracker?
+    private var indexEmoji = IndexPath()
+    private var indexColor = IndexPath()
     
     private lazy var buttonNewTracker: UIButton = {
         let imageButton = UIImage(systemName: "plus")?.withTintColor(ColorsForTheTheme.shared.buttonAction, renderingMode: .alwaysOriginal)
@@ -127,13 +132,15 @@ class TrackerViewController: UIViewController {
             print("Ошибка при извлечении данных trackerRecords: \(error.localizedDescription)")
         }
         filteredDaysIsEmpty()
+        
     }
     
     //MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        data = trackerCategoryStore.fetchAllReturnModel()
+        allData = trackerCategoryStore.fetchAllReturnModel()
+        didDataChange()
         if let date = datePicker.date.removeTimeStamp() {
             currentDate = date
         } else {
@@ -142,6 +149,7 @@ class TrackerViewController: UIViewController {
         
         newTrackerViewController.delegate = self
         filtersViewController.delegate = self
+        editTrackerViewController.delegateEdit = self
         self.restorationIdentifier = "TrackerViewController"
         
         didChangedDatePicker()
@@ -233,66 +241,69 @@ class TrackerViewController: UIViewController {
     }
     
     private func filteredSelectedDay() {
-          // Получение текущего календаря
-          let calendar = Calendar.current
-  
-          // Получение дня недели для выбранной даты
-          let selectedWeekday = calendar.component(.weekday, from: currentDate)
-  
-          // Получение локализованной строки для выбранного дня недели
-          let localizedWeekdayString = localizedWeekday(from: selectedWeekday)
-  
-          // Создание пустого массива кортежей (String, [Tracker])
-          var updatedFilteredDays = [(String, [Tracker])]()
-  
-          // Итерация через все элементы в data, где каждый элемент представляет собой категорию и список трекеров
-          for (category, trackers) in data {
-              // Переменная для хранения индекса существующей секции
-              var existingSectionIndex: Int?
-  
-              // Поиск существующей секции для текущей категории в массиве updatedFilteredDays
-              for (index, filteredSection) in updatedFilteredDays.enumerated() {
-                  if filteredSection.0 == category {
-                      existingSectionIndex = index
-                      break
-                  }
-              }
-              // Фильтрация трекеров в текущей категории на основе выбранного дня недели
-              let filteredTrackers = trackers.filter { tracker in
-                  if let schedule = tracker.schedule {
-                      return schedule.contains(where: { $0.rawValue == localizedWeekdayString })
-                  }
-                  return false
-              }
-  
-              // Проверка, что отфильтрованный список трекеров не пустой
-              if !filteredTrackers.isEmpty {
-                  // Если существует секция для данной категории, добавляем отфильтрованные трекеры в эту секцию
-                  if let existingIndex = existingSectionIndex {
-                      updatedFilteredDays[existingIndex].1 += filteredTrackers
-                  } else {
-                      // В противном случае, создаем новую секцию с соответствующей категорией и отфильтрованными трекерами
-                      updatedFilteredDays.append((category, filteredTrackers))
-                  }
-              }
-          }
-          // Обновление массива filteredDays данными из updatedFilteredDays
-          filteredDays = updatedFilteredDays
-          filteredDaysIsEmpty()
-          trackerCollection.reloadData()
-      }
-
+        // Получение текущего календаря
+        let calendar = Calendar.current
+        
+        // Получение дня недели для выбранной даты
+        let selectedWeekday = calendar.component(.weekday, from: currentDate)
+        
+        // Получение локализованной строки для выбранного дня недели
+        let localizedWeekdayString = localizedWeekday(from: selectedWeekday)
+        
+        // Создание пустого массива кортежей (String, [Tracker])
+        var updatedFilteredDays = [(String, [Tracker])]()
+        if !pinData.1.isEmpty {
+            updatedFilteredDays.append(pinData)
+        }
+        
+        // Итерация через все элементы в data, где каждый элемент представляет собой категорию и список трекеров
+        for (category, trackers) in data {
+            // Переменная для хранения индекса существующей секции
+            var existingSectionIndex: Int?
+            
+            // Поиск существующей секции для текущей категории в массиве updatedFilteredDays
+            for (index, filteredSection) in updatedFilteredDays.enumerated() {
+                if filteredSection.0 == category {
+                    existingSectionIndex = index
+                    break
+                }
+            }
+            // Фильтрация трекеров в текущей категории на основе выбранного дня недели
+            let filteredTrackers = trackers.filter { tracker in
+                if let schedule = tracker.schedule {
+                    return schedule.contains(where: { $0.rawValue == localizedWeekdayString })
+                }
+                return false
+            }
+            
+            // Проверка, что отфильтрованный список трекеров не пустой
+            if !filteredTrackers.isEmpty {
+                // Если существует секция для данной категории, добавляем отфильтрованные трекеры в эту секцию
+                if let existingIndex = existingSectionIndex {
+                    updatedFilteredDays[existingIndex].1 += filteredTrackers
+                } else {
+                    // В противном случае, создаем новую секцию с соответствующей категорией и отфильтрованными трекерами
+                    updatedFilteredDays.append((category, filteredTrackers))
+                }
+            }
+        }
+        // Обновление массива filteredDays данными из updatedFilteredDays
+        filteredDays = updatedFilteredDays
+        filteredDaysIsEmpty()
+        trackerCollection.reloadData()
+    }
+    
     private func filterTrackersForSelectedDay() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         datePicker.date = Date()  // Устанавливаем текущую дату в datePicker
         let selectedDate = currentDate  // Получаем выбранную дату из datePicker
-
+        
         let calendar = Calendar.current
         let selectedWeekday = calendar.component(.weekday, from: selectedDate)
         let localizedWeekdayString = localizedWeekday(from: selectedWeekday)
-
+        
         var updatedFilteredDays = [(String, [Tracker])]()
-
+        
         for (category, trackers) in data {
             let filteredTrackers = trackers.filter { tracker in
                 if let schedule = tracker.schedule {
@@ -304,10 +315,10 @@ class TrackerViewController: UIViewController {
                 }
                 return false
             }
-
+            
             updatedFilteredDays.append((category, filteredTrackers))  // Добавляем все отфильтрованные трекеры, даже если список пустой
         }
-
+        
         filteredDays = updatedFilteredDays
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
@@ -316,30 +327,31 @@ class TrackerViewController: UIViewController {
     private func showCompletedTrackersForSelectedDay() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         let selectedDate = currentDate  // Получаем выбранную дату из datePicker
-
+        
         var updatedFilteredDays = [(header: String, [Tracker])]()
-
+        
         for (category, trackers) in data {
             let completedTrackers = trackers.filter { tracker in
                 // Проверяем, есть ли завершенная запись для данного трекера и выбранной даты
                 return trackerRecords.contains(where: { $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: selectedDate) })
             }
-
+            
             if !completedTrackers.isEmpty {
                 updatedFilteredDays.append((category, completedTrackers))
             }
         }
-
+        
         filteredDays = updatedFilteredDays
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
     }
+    
     private func showUncompletedTrackersForSelectedDay() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         let selectedDate = currentDate  // Получаем выбранную дату из datePicker
-
+        
         var updatedFilteredDays = [(header: String, [Tracker])]()
-
+        
         for (category, trackers) in data {
             let uncompletedTrackers = trackers.filter { tracker in
                 let hasCompletedRecord = trackerRecords.contains { $0.trackerId == tracker.id && Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
@@ -353,12 +365,12 @@ class TrackerViewController: UIViewController {
                     return false
                 }
             }
-
+            
             if !uncompletedTrackers.isEmpty {
                 updatedFilteredDays.append((category, uncompletedTrackers))
             }
         }
-
+        
         filteredDays = updatedFilteredDays
         filteredDaysIsEmpty()
         trackerCollection.reloadData()
@@ -382,19 +394,20 @@ class TrackerViewController: UIViewController {
         }
         return result
     }
+    
     private func getTotalDateCount(forTrackerId id: UUID) -> Int {
         let matchingRecords = trackerRecords.filter { $0.trackerId == id }
         return matchingRecords.count
     }
     
-    func addNewTracker(title: String, newTracker: Tracker) {
-        if let existingCategoryIndex = data.firstIndex(where: { $0.header == title }) {
-            if !data.contains(where: { $0.1.contains(where: { $0.id == newTracker.id }) }) {
-                data[existingCategoryIndex].1.append(newTracker)
+    private func addNewTracker(title: String, newTracker: Tracker) {
+        if let existingCategoryIndex = allData.firstIndex(where: { $0.header == title }) {
+            if !allData.contains(where: { $0.1.contains(where: { $0.id == newTracker.id }) }) {
+                allData[existingCategoryIndex].1.append(newTracker)
             }
         } else {
             let newCategory = (header: title, [newTracker])
-            data.append(newCategory)
+            allData.append(newCategory)
         }
         
         do {
@@ -403,26 +416,66 @@ class TrackerViewController: UIViewController {
         } catch {
             print("Ошибка добавления трекера: \(error.localizedDescription)")
         }
-        
+        didDataChange()
+        didChangedDatePicker()
         trackerCollection.reloadData()
     }
-   
+    
+    private func deleteTracker(tracker: Tracker) {
+        guard let currenCategoryIndex = allData.firstIndex(where: { $0.1.contains { track in
+            track.id == tracker.id }})  else { return }
+        var currentData = allData[currenCategoryIndex]
+        currentData.1 = currentData.1.filter { $0.id != tracker.id }
+        allData[currenCategoryIndex] = currentData
+        didDataChange()
+        didChangedDatePicker()
+        
+    }
+    
+    private func updateTrackerData(category: String, tracker: Tracker) {
+        if let currenCategoryIndex = allData.firstIndex(where: { $0.1.contains { track in
+            track.id == tracker.id }})  {
+            var currentData = allData[currenCategoryIndex]
+            currentData.1 = currentData.1.filter { $0.id != tracker.id }
+            currentData.1.append(tracker)
+            allData[currenCategoryIndex] = currentData
+        } else {
+            let newCategory = (category, [tracker])
+            allData.append(newCategory)
+        }
+        
+        didDataChange()
+        didChangedDatePicker()
+    }
+    
+    private func didDataChange() {
+        data = allData.map { category in
+            let trackers = category.1.filter { !$0.isPin }
+            return (category.header, trackers)
+        }
+        let tempTrackers = allData.flatMap { category in
+            let trackers = category.1.filter { $0.isPin }
+            return  trackers
+        }
+        pinData.1 = tempTrackers
+    }
+    
     @objc private func didChangedDatePicker() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
         
         switch currentFilter {
         case LocalizableKeys.allTrackers:
-                filteredSelectedDay()
+            filteredSelectedDay()
         case LocalizableKeys.trackersForToday:
-                currentDate = Calendar.current.startOfDay(for: Date())
-                datePicker.setDate(currentDate, animated: true)
-                filteredSelectedDay()
+            currentDate = Calendar.current.startOfDay(for: Date())
+            datePicker.setDate(currentDate, animated: true)
+            filteredSelectedDay()
         case LocalizableKeys.completed:
-                showCompletedTrackersForSelectedDay()
+            showCompletedTrackersForSelectedDay()
         case LocalizableKeys.notCompleted:
-                showUncompletedTrackersForSelectedDay()
-            default:
-                break
+            showUncompletedTrackersForSelectedDay()
+        default:
+            break
         }
     }
     
@@ -456,11 +509,14 @@ extension TrackerViewController: UISearchBarDelegate {
                     return nameMatch || headerMatch
                 }
                 if !filteredTrackers.isEmpty {
+                    filteredDaysIsEmpty()
                     return (header, filteredTrackers)
                 } else {
+                    filteredDaysIsEmpty()
                     return nil
                 }
             }
+
             filteredDays = filteredData
             trackerCollection.reloadData()
         }
@@ -514,36 +570,40 @@ extension TrackerViewController: UISearchBarDelegate {
                 
             }
         }
-            
-            
-        var pinTracker: Bool // Assume you have a variable to track if the tracker is pinned or not
         
-        // Your logic for checking if the tracker cell is pinned
-        // For example:
-        let pinned = pinnedTrackerCell(cell: cell, indexPath: indexPath, date: datePicker.date)
-        pinTracker = !pinned
+        
+        var pinTracker: Bool = uppdateTracker?.isPin ?? false
+        
+        //        let pinned = pinnedTrackerCell(cell: cell, indexPath: indexPath, date: datePicker.date)
+        //        pinTracker = !pinned
         
         let menu = UIMenu(
             children: [
-                UIAction(title: pinTracker ? "Открепить" : "Закрепить") { [weak self] _ in
-                    // Your action for pinning/unpinning tracker
-                    if pinTracker {
-                        self?.makePin(indexPath: indexPath)
+                UIAction(title: pinTracker ? LocalizableKeys.trackerVCUnpin : LocalizableKeys.trackerVCPin) { [weak self] _ in
+                    AnalyticsService.clickRecordTrackReport()
+                    if !pinTracker {
+                        self?.makePin(category: self?.updateCategory, tracker: self?.uppdateTracker)
                     } else {
-                        self?.makeUnpin(indexPath: indexPath)
+                        self?.makeUnpin(category: self?.updateCategory, tracker: self?.uppdateTracker)
                     }
                 },
-                UIAction(title: "Редактировать") { [weak self] _ in
-                    
+                UIAction(title: LocalizableKeys.trackerVCEdit) { [weak self] _ in
+                    AnalyticsService.editTrackReport()
                     if let vc = self?.editTrackerViewController {
                         self?.present(vc, animated: true)
                     }
-                    
                     self?.editTrackerViewController.updateTracker(category: self?.updateCategory, countDays: self?.updateCountDay, tracker: self?.uppdateTracker)
                 },
-                UIAction(title: "Удалить", image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive) { [weak self] _ in
-                    // Your action for deleting tracker
-                    // ...
+                UIAction(title: LocalizableKeys.trackerVCDelete, image: nil, identifier: nil, discoverabilityTitle: nil, attributes: .destructive) { _ in
+                    AnalyticsService.deleteTrackReport()
+                    if let uppdateTracker = self.uppdateTracker {
+                        do {
+                            try self.trackerStore.deleteTracker(uppdateTracker)
+                            self.deleteTracker(tracker: uppdateTracker)
+                        } catch {
+                            print("Ошибка удаления трекера: \(error.localizedDescription)")
+                        }
+                    }
                 }
             ])
         
@@ -554,20 +614,24 @@ extension TrackerViewController: UISearchBarDelegate {
         return configuration
     }
     
-    func pinnedTrackerCell(cell: TrackerCastomCell, indexPath: IndexPath, date: Date) -> Bool {
-        // Implement your logic to check if the tracker cell is pinned based on the provided cell, index path, and date
-        // Return true if the cell is pinned, false otherwise
-        return true // Placeholder return value, replace with actual logic
+    func makePin(category: String?, tracker: Tracker?) {
+        guard let category, let tracker else { return }
+        do {
+            try trackerStore.updateTracker(newCategory: category, tracker: tracker, isPin: true)
+        } catch {
+            print("Ошибка обновления trackerStore.updateTracker: \(error.localizedDescription)")
+        }
+        updateTrackerData(category: category, tracker: Tracker(tracker: tracker, isPinned: true))
     }
     
-    func makePin(indexPath: IndexPath) {
-        // Action to pin the tracker at the specified index path
-        // ...
-    }
-    
-    func makeUnpin(indexPath: IndexPath) {
-        // Action to unpin the tracker at the specified index path
-        // ...
+    func makeUnpin(category: String?, tracker: Tracker?) {
+        guard let category, let tracker else { return }
+        do {
+            try trackerStore.updateTracker(newCategory: category, tracker: tracker, isPin: false)
+        } catch {
+            print("Ошибка обновления trackerStore.updateTracker: \(error.localizedDescription)")
+        }
+        updateTrackerData(category: category, tracker: Tracker(tracker: tracker, isPinned: false))
     }
 }
 // MARK: - extension UICollectionViewDataSource
@@ -590,10 +654,11 @@ extension TrackerViewController: UICollectionViewDataSource {
         uppdateTracker = tracker
         let counterDays = getTotalDateCount(forTrackerId: tracker.id)
         let eventText = filterTrackerEvent(tracker, counterDays)
-
+        
         if let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "TrackerCastomCell", for: indexPath) as? TrackerCastomCell {
-
+            
             if trackerRecords.first(where: { $0.trackerId == tracker.id && $0.date == currentDate}) != nil {
+                
                 cell.updateData(tracker: tracker, click: true, counterDays: eventText)
                 AnalyticsService.clickTrackerReport()
             } else {
@@ -643,17 +708,15 @@ extension TrackerViewController: UICollectionViewDelegateFlowLayout {
 
 // MARK: - extension NewHabitDelegate
 extension TrackerViewController: NewHabitDelegate {
-    func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?) {
+    func newTracker(title: String, name: String, emoji: String, color: UIColor, weekday: [Weekday]?, indexEmoji: IndexPath, indexColor: IndexPath) {
         let newTracker = Tracker(id: UUID(),
                                  name: name,
                                  emoji: emoji,
                                  color: color,
-                                 schedule: weekday)
-        
+                                 schedule: weekday, 
+                                 isPin: false)
         addNewTracker(title: title, newTracker: newTracker)
         
-        didChangedDatePicker()
-        trackerCollection.reloadData()
         dismiss(animated: true)
     }
 }
@@ -684,6 +747,22 @@ extension TrackerViewController: TrackerCellDelegate {
     }
 }
 
+// MARK: - EditTracker
+extension TrackerViewController: EditTracker {
+    func editTracker(category: String, tracker: Tracker) {
+        do {
+            try trackerStore.updateTracker(newCategory: "updateCategory", tracker: tracker)
+        } catch {
+            print("Ошибка обновления trackerStore.updateTracker: \(error.localizedDescription)")
+        }
+        
+        updateTrackerData(category: category, tracker: tracker)
+        
+        print(category, tracker, indexEmoji, indexColor)
+        dismiss(animated: true)
+    }
+}
+
 // MARK: - UIDatePicker
 extension UIDatePicker {
     func setTextColor(_ color: UIColor) {
@@ -710,8 +789,8 @@ extension TrackerViewController: FiltersDelegate {
     func filter(_ filter: String) {
         dismiss(animated: true)
         currentFilter = filter
-            didChangedDatePicker()
-
+        didChangedDatePicker()
+        
         trackerCollection.reloadData()
     }
 }

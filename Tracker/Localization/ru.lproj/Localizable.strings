@@ -18,6 +18,10 @@
 "trackerVCSearchBar" = "Поиск";
 "trackerVCQuestionLabelFirst" = "Добавьте первый трекер";
 "trackerVCQuestionLabelNo" = "Ничего не найдено";
+"trackerVCUnpin" = "Открепить";
+"trackerVCPin" = "Закрепить";
+"trackerVCEdit" = "Редактировать";
+"trackerVCDelete" = "Удалить";
 
 // MARK: - FiltersViewController
 "allTrackers" = "Все трекеры";
@@ -28,7 +32,7 @@
 // MARK: - NewTrackerViewController
 "newTrackerVCHeadingLabel" = "Создание трекера";
 "newTrackerVCHabitButton" = "Привычка";
-"newTrackerVCUnregulatedEventButton" = "Нерегулируемое событие";
+"newTrackerVCIrregularEvents" = "Нерегулярные событие";
 
 // MARK: - NewHabitViewController / UnregulatedEventViewController
 "newHabitVCEveryday" = "Каждый день";

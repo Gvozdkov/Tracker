@@ -7,7 +7,7 @@ protocol ScheduleCastomCellDelegate: AnyObject {
 final class ScheduleCastomCell: UITableViewCell {
     private var weekday: Weekday?
     weak var delegate: ScheduleCastomCellDelegate?
-    private var selectedSwitch = false
+    var selectedSwitch = false
     
     private lazy var scheduleLabel: UILabel = {
         let label = UILabel()
@@ -57,10 +57,15 @@ final class ScheduleCastomCell: UITableViewCell {
         scheduleLabel.text = weekdaysLocalizable
     }
     
+    func selectSwitch(inOn: Bool) {
+        uISwitch.isOn = inOn
+        selectedSwitch = inOn
+    }
+    
     @objc private func didToggleSwitchView(_ sender: UISwitch) {
-
-        guard let weekday else { return }
-        if uISwitch.isOn {
+        guard let weekday = weekday else { return }
+        
+        if sender.isOn {
             selectedSwitch = true
             delegate?.uISwitch(uISwitch: true, weekday: weekday)
             print("передаю данные \(selectedSwitch) \(weekday)")
@@ -69,6 +74,5 @@ final class ScheduleCastomCell: UITableViewCell {
             delegate?.uISwitch(uISwitch: false, weekday: weekday)
             print("передаю данные \(selectedSwitch) \(weekday)")
         }
-        
     }
 }

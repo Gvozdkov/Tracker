@@ -65,8 +65,15 @@ final class TrackerCastomCell: UICollectionViewCell {
         return button
     }()
     
+    private lazy var pinImage: UIImageView = {
+        let image = UIImageView()
+        image.translatesAutoresizingMaskIntoConstraints = false
+        return image
+    }()
+    
     private var imageButton = UIImage(systemName: "plus")
-    private var tracker: Tracker = Tracker(id: UUID(), name: "", emoji: "", color: .black, schedule: [])
+    
+    private var tracker: Tracker = Tracker(id: UUID(), name: "", emoji: "", color: .black, schedule: [], isPin: false)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -85,6 +92,7 @@ final class TrackerCastomCell: UICollectionViewCell {
     
     private func constraintsSettingsView() {
         frameView.addSubview(colorView)
+        colorView.addSubview(pinImage)
         colorView.addSubview(gradient)
         colorView.addSubview(nameLabel)
         colorView.addSubview(emojiLabel)
@@ -103,6 +111,11 @@ final class TrackerCastomCell: UICollectionViewCell {
             colorView.trailingAnchor.constraint(equalTo: frameView.trailingAnchor),
             colorView.widthAnchor.constraint(equalToConstant: 167),
             colorView.heightAnchor.constraint(equalToConstant: 90),
+            
+            pinImage.topAnchor.constraint(equalTo: frameView.topAnchor, constant: 12),
+            pinImage.trailingAnchor.constraint(equalTo: frameView.trailingAnchor, constant: -4),
+            pinImage.widthAnchor.constraint(equalToConstant: 24),
+            pinImage.heightAnchor.constraint(equalToConstant: 24),
             
             gradient.topAnchor.constraint(equalTo: colorView.topAnchor, constant: 12),
             gradient.leadingAnchor.constraint(equalTo: colorView.leadingAnchor, constant: 12),
@@ -138,6 +151,13 @@ final class TrackerCastomCell: UICollectionViewCell {
         button.backgroundColor = tracker.color
         dayLabel.text = counterDays
         self.tracker = tracker
+        
+        if tracker.isPin {
+            pinImage.image = UIImage(named: "Pin")
+        } else {
+            pinImage.image = nil
+        }
+        
         
         switch click {
         case true:

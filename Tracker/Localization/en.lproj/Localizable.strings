@@ -18,6 +18,10 @@
 "trackerVCSearchBar" = "Search";
 "trackerVCQuestionLabelFirst" = "Add the first tracker";
 "trackerVCQuestionLabelNo" = "Nothing was found";
+"trackerVCUnpin" = "Unpin";
+"trackerVCPin" = "Pin";
+"trackerVCEdit" = "Edit";
+"trackerVCDelete" = "Delete";
 
 // MARK: - FiltersViewController
 "allTrackers" = "All trackers";
@@ -28,7 +32,7 @@
 // MARK: - NewTrackerViewController
 "newTrackerVCHeadingLabel" = "Creating a tracker";
 "newTrackerVCHabitButton" = "Habit";
-"newTrackerVCUnregulatedEventButton" = "Unregulated event";
+"newTrackerVCIrregularEvents" = "Irregular events";
 
 // MARK: - NewHabitViewController / UnregulatedEventViewController
 "newHabitVCEveryday" = "Every day";
@@ -42,6 +46,7 @@
 "categoryVCHabitButton" = "Add a category";
 "categoryVCQuestionLabelText1" = "Habits and events can be";
 "categoryVCQuestionLabelText2" = "combine by meaning";
+
 // MARK: - NewCategoryViewController
 "newCategoryVCHeadingLabel" = "New catagory";
 

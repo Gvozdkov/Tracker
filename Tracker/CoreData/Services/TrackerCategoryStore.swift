@@ -81,7 +81,7 @@ class TrackerCategoryStore: NSObject {
               let color = trackerCoreData.color,
               let schedule = trackerCoreData.shedule else { return nil }
         
-        return Tracker(id: id, name: name, emoji: emoji, color: СolorMarshalling.hecColor(from: color), schedule: ScheduleConverter.convertToArray(string: schedule))
+        return Tracker(id: id, name: name, emoji: emoji, color: СolorMarshalling.hecColor(from: color), schedule: ScheduleConverter.convertToArray(string: schedule), isPin: false)
     }
     
     
@@ -112,6 +112,12 @@ class TrackerCategoryStore: NSObject {
             context.delete(trackerCategory)
             try context.save()
         }
+    }
+    
+    func categoryFromString(_ categoryName: String) throws -> TrackerCategoryCoreData {
+        let newCategory = TrackerCategoryCoreData(context: context)
+        newCategory.name = categoryName
+        return newCategory
     }
 }
 
