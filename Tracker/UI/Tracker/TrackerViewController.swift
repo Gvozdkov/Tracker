@@ -18,8 +18,8 @@ class TrackerViewController: UIViewController {
     
     private var currentDate = Date()
     private var currentFilter = LocalizableKeys.allTrackers
-    private var updateCategory = "ghh"
-    private var updateCountDay = "9"
+    private var updateCategory = ""
+    private var updateCountDay = ""
     private var uppdateTracker: Tracker?
     private var indexEmoji = IndexPath()
     private var indexColor = IndexPath()
@@ -462,6 +462,7 @@ class TrackerViewController: UIViewController {
     
     @objc private func didChangedDatePicker() {
         currentDate = datePicker.date.removeTimeStamp() ?? Date()
+        searchBar.text = ""
         
         switch currentFilter {
         case LocalizableKeys.allTrackers:
@@ -494,14 +495,17 @@ class TrackerViewController: UIViewController {
 }
 // MARK: - extension UISearchBarDelegate
 extension TrackerViewController: UISearchBarDelegate {
-    // Метод для обработки изменений в тексте searchBar
+//     Метод для обработки изменений в тексте searchBar
+
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        filteredDaysIsEmpty()
+        filteredSelectedDay()
         if searchText.isEmpty {
             // Если строка поиска пуста, отображаем все данные для выбранного дня
             filteredSelectedDay()
         } else {
             // Фильтруем данные на основе введенного запроса
-            let filteredData = data.compactMap { (header, trackers) in
+            let filteredData = filteredDays.compactMap { (header, trackers) in
                 let filteredTrackers = trackers.filter { tracker in
                     // Здесь можно указать условие для фильтрации по вашим критериям
                     let nameMatch = tracker.name.lowercased().contains(searchText.lowercased())
@@ -509,10 +513,10 @@ extension TrackerViewController: UISearchBarDelegate {
                     return nameMatch || headerMatch
                 }
                 if !filteredTrackers.isEmpty {
-                    filteredDaysIsEmpty()
                     return (header, filteredTrackers)
                 } else {
-                    filteredDaysIsEmpty()
+                    screensaver.isHidden = false
+                    starImageView.image = UIImage(named: "No")
                     return nil
                 }
             }
