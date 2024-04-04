@@ -496,7 +496,6 @@ class TrackerViewController: UIViewController {
 // MARK: - extension UISearchBarDelegate
 extension TrackerViewController: UISearchBarDelegate {
 //     Метод для обработки изменений в тексте searchBar
-
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         filteredDaysIsEmpty()
         filteredSelectedDay()
@@ -520,8 +519,8 @@ extension TrackerViewController: UISearchBarDelegate {
                     return nil
                 }
             }
-
             filteredDays = filteredData
+            filteredDaysIsEmpty()
             trackerCollection.reloadData()
         }
     }
