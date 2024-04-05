@@ -1,7 +1,71 @@
-/* 
-  Localizable.strings
-  Tracker
+// MARK: - Doublons
+"trackersText" = "Трекеры";
+"enterAName" = "Введите название трекера";
+"category" = "Категория";
+"done" = "Готово";
+"statistics" = "Статистика";
+"schedule" = "Расписание";
+"filters" = "Фильтры";
 
-  Created by Алексей Гвоздков on 15.03.2024.
-  
-*/
+// MARK: - OnboardingViewController
+"onboardingVCBigHeadline1" = "Отслеживайте только";
+"onboardingVCBigHeadline2" = "то, что хотите";
+"onboardingVCBigHeadline3" = "Даже если это";
+"onboardingVCBigHeadline4" = "не литры воды и йога";
+"onboardingVCToBeginButton" = "Вот это технологии!";
+
+// MARK: - TrackerViewController
+"trackerVCSearchBar" = "Поиск";
+"trackerVCQuestionLabelFirst" = "Добавьте первый трекер";
+"trackerVCQuestionLabelNo" = "Ничего не найдено";
+"trackerVCUnpin" = "Открепить";
+"trackerVCPin" = "Закрепить";
+"trackerVCEdit" = "Редактировать";
+"trackerVCDelete" = "Удалить";
+
+// MARK: - FiltersViewController
+"allTrackers" = "Все трекеры";
+"trackersForToday" = "Трекеры на сегодня";
+"completed" = "Завершенные";
+"notCompleted" = "Не завершенные";
+
+// MARK: - NewTrackerViewController
+"newTrackerVCHeadingLabel" = "Создание трекера";
+"newTrackerVCHabitButton" = "Привычка";
+"newTrackerVCIrregularEvents" = "Нерегулярные событие";
+
+// MARK: - NewHabitViewController / UnregulatedEventViewController
+"newHabitVCEveryday" = "Каждый день";
+"newHabitVCHeadingLabel" = "Новая привычка";
+"newHabitVCColorLabel" = "Цвет";
+"newHabitVCCancelButton" = "Отменить";
+"newHabitVCCreateButton" = "Создать";
+
+// MARK: - CategoryViewController
+"categoryVCQuestionLabel" = "Категорий еще нет";
+"categoryVCHabitButton" = "Добавить категорию";
+"categoryVCQuestionLabelText1" = "Привычки и события можно";
+"categoryVCQuestionLabelText2" = "объединить по смыслу";
+
+// MARK: - NewCategoryViewController
+"newCategoryVCHeadingLabel" = "Новая категория";
+
+// MARK: - StatisticViewController
+"statisticVCQuestionLabel" = "Анализировать пока нечего";
+
+// MARK: - Weekday
+"monday" = "Понедельник";
+"tuesday" = "Вторник";
+"wednesday" = "Среда";
+"thursday" = "Четверг";
+"friday" = "Пятница";
+"saturday" = "Суббота";
+"sunday" = "Воскресенье";
+
+"mon" = "Пн";
+"tue" = "Вт";
+"wed" = "Ср";
+"thu" = "Чт";
+"fri" = "Пт";
+"sat" = "Сб";
+"sun" = "Вс";

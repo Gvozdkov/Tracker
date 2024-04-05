@@ -1,7 +1,71 @@
-/* 
-  Localizable.strings
-  Tracker
+// MARK: - Doublons
+"trackersText" = "Trackers";
+"enterAName" = "Enter the name of the tracker";
+"category" = "Category";
+"done" = "Done";
+"statistics" = "Statistics";
+"schedule" = "Schedule";
+"filters" = "Filters";
 
-  Created by Алексей Гвоздков on 15.03.2024.
-  
-*/
+// MARK: - OnboardingViewController
+"onboardingVCBigHeadline1" = "Track only";
+"onboardingVCBigHeadline2" = "what you want";
+"onboardingVCBigHeadline3" = "Even if it is's";
+"onboardingVCBigHeadline4" = "not liters of water and yoga";
+"onboardingVCToBeginButton" = "These are the technologies!";
+
+// MARK: - TrackerViewController
+"trackerVCSearchBar" = "Search";
+"trackerVCQuestionLabelFirst" = "Add the first tracker";
+"trackerVCQuestionLabelNo" = "Nothing was found";
+"trackerVCUnpin" = "Unpin";
+"trackerVCPin" = "Pin";
+"trackerVCEdit" = "Edit";
+"trackerVCDelete" = "Delete";
+
+// MARK: - FiltersViewController
+"allTrackers" = "All trackers";
+"trackersForToday" = "Trackers for today";
+"completed" = "Completed";
+"notCompleted" = "Not completed";
+
+// MARK: - NewTrackerViewController
+"newTrackerVCHeadingLabel" = "Creating a tracker";
+"newTrackerVCHabitButton" = "Habit";
+"newTrackerVCIrregularEvents" = "Irregular events";
+
+// MARK: - NewHabitViewController / UnregulatedEventViewController
+"newHabitVCEveryday" = "Every day";
+"newHabitVCHeadingLabel" = "New habit";
+"newHabitVCColorLabel" = "Color";
+"newHabitVCCancelButton" = "Cancel";
+"newHabitVCCreateButton" = "Create";
+
+// MARK: - CategoryViewController
+"categoryVCQuestionLabel" = "There are no categories yet";
+"categoryVCHabitButton" = "Add a category";
+"categoryVCQuestionLabelText1" = "Habits and events can be";
+"categoryVCQuestionLabelText2" = "combine by meaning";
+
+// MARK: - NewCategoryViewController
+"newCategoryVCHeadingLabel" = "New catagory";
+
+// MARK: - StatisticViewController
+"statisticVCQuestionLabel" = "There is nothing to analyze yet";
+
+// MARK: - Weekday
+"monday" = "Monday";
+"tuesday" = "Tuesday";
+"wednesday" = "Wednesday";
+"thursday" = "Thursday";
+"friday" = "Friday";
+"saturday" = "Saturday";
+"sunday" = "Sunday";
+
+"mon" = "Mon";
+"tue" = "Tue";
+"wed" = "Wed";
+"thu" = "Thu";
+"fri" = "Fri";
+"sat" = "Sat";
+"sun" = "Sun";
