@@ -1,7 +1,7 @@
 # ТЗ мобильного приложения для трекинга привычек
 # Ссылки
 
-![Simulator Screen Recording - iPhone 15 - 2024-04-05 at 16 12 04](https://github.com/Gvozdkov/Tracker/assets/124888518/c1839d98-3c00-4a32-bd9f-a8dc0e65d5f3)
+<video src='https://youtu.be/P47qoxTUf-8' width=180/>
 
 
 Дизайн Figma
