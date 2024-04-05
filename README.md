@@ -1,7 +1,10 @@
 # ТЗ мобильного приложения для трекинга привычек
 # Ссылки
 
-<video src='https://youtu.be/P47qoxTUf-8' width=180/>
+
+https://github.com/Gvozdkov/Tracker/assets/124888518/6f9f738e-d6ae-4277-a42b-181a3e8dfe2e
+
+
 
 
 Дизайн Figma
