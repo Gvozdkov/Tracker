@@ -7,7 +7,7 @@ https://github.com/Gvozdkov/Tracker/assets/124888518/6f9f738e-d6ae-4277-a42b-181
 
 
 
-Дизайн Figma![image](https://github.com/Gvozdkov/Tracker/assets/124888518/0e83a90e-2895-46e0-8b82-d794061a7225)
+Дизайн Figma![image]([https://github.com/Gvozdkov/Tracker/assets/124888518/0e83a90e-2895-46e0-8b82-d794061a7225](https://www.figma.com/file/gONgrq8Q5PfEs1LUo7KX4h/Tracker?type=design&node-id=1-1189&mode=design&t=XZt200c4piAxpER7-0))
 
 
 # Назначение и цели приложения
